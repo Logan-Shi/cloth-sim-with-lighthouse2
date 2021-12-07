@@ -81,6 +81,7 @@ public:
 	// methods
 	void Init( const char* dllName );
 	void SynchronizeSceneData();
+	void UpdatePhysics(const float dt);
 	void Render( const ViewPyramid& view, Convergence converge, bool async = false );
 	void WaitForRender();
 	void SetTarget( GLTexture* target, const uint spp );
@@ -98,6 +99,7 @@ private:
 	void SynchronizeTextures();
 	void SynchronizeMaterials();
 	void SynchronizeMeshes();
+	void ClothPhysics(HostMesh* mesh, const float dt);
 	void SynchronizeLights();
 	void UpdateSceneGraph();
 private:

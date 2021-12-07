@@ -200,10 +200,15 @@ int HostScene::AddMesh( const char* objFile, const float scale, const bool flatS
 	*lastSlash = 0;
 	return AddMesh( lastSlash + 1, tmp, scale, flatShaded );
 }
-int HostScene::AddMesh( const char* objFile, const char* dir, const float scale, const bool flatShaded )
+
+int HostScene::AddMesh(const char* objFile, const char* dir, const float scale, const bool flatShaded, const bool animated)
 {
-	HostMesh* newMesh = new HostMesh( objFile, dir, scale, flatShaded );
-	return AddMesh( newMesh );
+	if (animated)
+	{
+		physicsCount++;
+	}
+	HostMesh* newMesh = new HostMesh(objFile, dir, scale, flatShaded, animated);
+	return AddMesh(newMesh);
 }
 
 //  +-----------------------------------------------------------------------------+

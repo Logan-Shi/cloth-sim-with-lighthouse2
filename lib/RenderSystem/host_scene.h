@@ -79,9 +79,10 @@ public:
 	static void ResetAnimation( const int animId );
 	static void UpdateAnimation( const int animId, const float dt );
 	static int AnimationCount() { return (int)animations.size(); }
+	static int PhysicsCount() { return physicsCount; };
 	// scene construction / maintenance
 	static int AddMesh( HostMesh* mesh );
-	static int AddMesh( const char* objFile, const char* dir, const float scale = 1.0f, const bool flatShaded = false );
+	static int AddMesh(const char* objFile, const char* dir, const float scale = 1.0f, const bool flatShaded = false, const bool animated = false);
 	static int AddMesh( const char* objFile, const float scale = 1.0f, const bool flatShaded = false );
 	static int AddScene( const char* sceneFile, const mat4& transform = mat4::Identity() );
 	static int AddScene( const char* sceneFile, const char* dir, const mat4& transform );
@@ -112,6 +113,7 @@ public:
 	static inline Camera* camera;
 private:
 	static inline int nodeListHoles;	// zero if no instance deletions occurred; adding instances will be faster.
+	static inline int physicsCount = 0;
 };
 
 } // namespace lighthouse2

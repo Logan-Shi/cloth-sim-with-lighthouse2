@@ -56,9 +56,9 @@ void RenderAPI::SerializeCamera( const char* xmlFile )
 	renderer->scene->camera->Serialize( xmlFile );
 }
 
-int RenderAPI::AddMesh( const char* file, const char* dir, const float scale, bool flatShaded )
+int RenderAPI::AddMesh(const char* file, const char* dir, const float scale, bool flatShaded, bool animated)
 {
-	return renderer->scene->AddMesh( file, dir, scale, flatShaded );
+	return renderer->scene->AddMesh(file, dir, scale, flatShaded, animated);
 }
 
 int RenderAPI::AddMesh( const char* file, const float scale, bool flatShaded )
@@ -126,9 +126,19 @@ int RenderAPI::AnimationCount()
 	return renderer->scene->AnimationCount();
 }
 
+int RenderAPI::PhysicsCount()
+{
+	return renderer->scene->PhysicsCount();
+}
+
 void RenderAPI::SynchronizeSceneData()
 {
 	renderer->SynchronizeSceneData();
+}
+
+void RenderAPI::UpdatePhysics(const float dt)
+{
+	renderer->UpdatePhysics(dt);
 }
 
 void RenderAPI::Render( Convergence converge, bool async )

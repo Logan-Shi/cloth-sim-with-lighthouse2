@@ -36,7 +36,7 @@ public:
 	void Shutdown();
 	void DeserializeCamera( const char* camera );
 	void SerializeCamera( const char* camera );
-	int AddMesh( const char* file, const char* dir, const float scale = 1.0f, const bool flatShaded = false );
+	int AddMesh(const char* file, const char* dir, const float scale = 1.0f, bool flatShaded = false, bool animated = false);
 	int AddMesh( const char* file, const float scale = 1.0f, const bool flatShaded = false );
 	int AddScene( const char* file, const char* dir, const mat4& transform = mat4::Identity() );
 	int AddScene( const char* file, const mat4& transform = mat4::Identity() );
@@ -49,7 +49,9 @@ public:
 	const mat4& GetNodeTransform( const int nodeId );
 	void ResetAnimation( const int animId );
 	void UpdateAnimation( const int animId, const float dt );
+	void UpdatePhysics(const float dt);
 	int AnimationCount();
+	int PhysicsCount();
 	void SynchronizeSceneData();
 	void Render( Convergence converge, bool async = false );
 	void WaitForRender();

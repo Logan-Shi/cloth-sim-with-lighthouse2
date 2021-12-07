@@ -34,7 +34,7 @@ static float3 arcStart;
 static int2 arcPivot;
 static mat4 matStart;
 static int arcInst = 0;
-static int cloud, knight, plane;
+static int plane, cloth = 0;
 
 #include "main_tools.h"
 #include "main_ui.h"
@@ -150,13 +150,15 @@ void Initialize()
 	sky->Load( "../_shareddata/sky_15.hdr" );
 	sky->worldToLight = mat4::RotateX( -PI / 2 ); // compensate for different evaluation in PBRT
 	renderer->GetScene()->SetSkyDome( sky );
-	cloud = renderer->AddScene( "../_shareddata/cloud3/scene.gltf" );
-	knight = renderer->AddScene( "../_shareddata/knight/scene.gltf", mat4::Translate( 8, 0, 0 ) * mat4::Scale( 8 ) );
 	int floorMat = renderer->AddMaterial( make_float3( 1 ), "floormaterial" );
 	HostMaterial* m = renderer->GetMaterial( floorMat );
 	plane = renderer->AddQuad( make_float3( 0, 1, 0 ), make_float3( 0, -2, 0 ), 100, 100, floorMat );
 	renderer->AddInstance( plane );
 	renderer->DeserializeMaterials( "materials.xml" );
+	cloth = renderer->AddInstance(renderer->AddMesh("robe.obj", "../_shareddata/", 10.0f, false, true));
+
+	printf("loaded %d animations\n", renderer->AnimationCount());
+	printf("loaded %d physics\n", renderer->PhysicsCount());
 }
 
 //  +-----------------------------------------------------------------------------+
@@ -183,13 +185,15 @@ void main()
 		camMoved = renderer->GetCamera()->Changed();
 		if (hasFocus) if (HandleInput( frameTime )) camMoved = true;
 		if (HandleMaterialChange()) camMoved = true;
+		renderer->SynchronizeSceneData();
 		// update animations
-		if (!animPaused) for (int i = 0; i < renderer->AnimationCount(); i++)
+		if (!animPaused) for (int i = 0; i < renderer->AnimationCount()+ renderer->PhysicsCount(); i++)
 		{
 			renderer->UpdateAnimation( i, frameTime );
+			renderer->UpdatePhysics(frameTime);
 			camMoved = true; // will remain false if scene has no animations
 		}
-		renderer->SynchronizeSceneData();
+		
 		// wait for rendering to complete
 		renderer->WaitForRender();
 		coreStats = renderer->GetCoreStats();

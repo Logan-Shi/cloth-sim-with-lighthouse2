@@ -123,6 +123,36 @@ void RenderSystem::SynchronizeMeshes()
 }
 
 //  +-----------------------------------------------------------------------------+
+//  |  RenderSystem::MeshPhysics                                                  |
+//  |  update mesh physics with verlet integration                                |
+//  +-----------------------------------------------------------------------------+
+void RenderSystem::UpdatePhysics(const float dt)
+{
+	for (int s = (int)scene->meshPool.size(), modelIdx = 0; modelIdx < s; modelIdx++)
+	{
+		HostMesh* mesh = scene->meshPool[modelIdx];// set modelIdx
+		if (mesh->isAnimated)
+		{
+			ClothPhysics(mesh,dt);
+			core->SetGeometry(modelIdx, mesh->vertices.data(), (int)mesh->vertices.size(), (int)mesh->triangles.size(), (CoreTri*)mesh->triangles.data());
+		}
+	}
+}
+
+//  +-----------------------------------------------------------------------------+
+//  |  RenderSystem::MeshPhysics                                                  |
+//  |  update cloth vertex position with spring model                             |
+//  +-----------------------------------------------------------------------------+
+void RenderSystem::ClothPhysics(HostMesh* mesh, const float dt)
+{
+	for (int s = (int)mesh->vertices.size(), vertexIdx = 0; vertexIdx < s; vertexIdx++)
+	{
+		mesh->vertices[vertexIdx] += 0.01f;
+	}
+}
+
+
+//  +-----------------------------------------------------------------------------+
 //  |  RenderSystem::UpdateSceneGraph                                             |
 //  |  Walk the scene graph:                                                      |
 //  |  - update all node matrices                                                 |

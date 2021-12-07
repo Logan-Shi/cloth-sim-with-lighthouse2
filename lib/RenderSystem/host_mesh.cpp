@@ -75,9 +75,9 @@ HostMesh::HostMesh( const int triCount )
 	vertices.resize( triCount * 3 );
 }
 
-HostMesh::HostMesh( const char* file, const char* dir, const float scale, const bool flatShaded )
+HostMesh::HostMesh(const char* file, const char* dir, const float scale, const bool flatShaded, const bool animated)
 {
-	LoadGeometry( file, dir, scale, flatShaded );
+	LoadGeometry(file, dir, scale, flatShaded, animated);
 }
 
 HostMesh::HostMesh( const tinygltfMesh& gltfMesh, const tinygltfModel& gltfModel, const vector<int>& matIdx, const int materialOverride )
@@ -106,21 +106,21 @@ HostMesh::~HostMesh()
 
 //  +-----------------------------------------------------------------------------+
 //  |  HostMesh::LoadGeometry                                                     |
-//  |  Load geometry data from disk.                                        LH2'19|
+//  |  Load geometry data from disk for animation.                                |
 //  +-----------------------------------------------------------------------------+
-void HostMesh::LoadGeometry( const char* file, const char* dir, const float scale, const bool flatShaded )
+void HostMesh::LoadGeometry(const char* file, const char* dir, const float scale, const bool flatShaded, const bool animated)
 {
 	// process supplied file name
-	mat4 transform = mat4::Scale( scale ); // may include scale, translation, axis exchange
-	string cleanFileName = LowerCase( string( dir ) + (dir[strlen( dir ) - 1] == '/' ? "" : "/") + string( file ) ); // so we don't have to check for e.g. .OBJ
-	string extension = GetFilePathExtension( cleanFileName );
-	if (extension.compare( "obj" ) == 0)
+	mat4 transform = mat4::Scale(scale); // may include scale, translation, axis exchange
+	string cleanFileName = LowerCase(string(dir) + (dir[strlen(dir) - 1] == '/' ? "" : "/") + string(file)); // so we don't have to check for e.g. .OBJ
+	string extension = GetFilePathExtension(cleanFileName);
+	if (extension.compare("obj") == 0)
 	{
-		LoadGeometryFromOBJ( cleanFileName.c_str(), dir, transform, flatShaded );
+		LoadGeometryFromOBJ(cleanFileName.c_str(), dir, transform, flatShaded, animated);
 	}
 	else
 	{
-		FATALERROR( "unsupported extension in file %s", cleanFileName.c_str() );
+		FATALERROR("unsupported extension in file %s", cleanFileName.c_str());
 	}
 }
 
@@ -128,7 +128,7 @@ void HostMesh::LoadGeometry( const char* file, const char* dir, const float scal
 //  |  HostMesh::LoadGeometryFromObj                                              |
 //  |  Load an obj file using tinyobj.                                      LH2'19|
 //  +-----------------------------------------------------------------------------+
-void HostMesh::LoadGeometryFromOBJ( const string& fileName, const char* directory, const mat4& transform, const bool flatShaded )
+void HostMesh::LoadGeometryFromOBJ( const string& fileName, const char* directory, const mat4& transform, const bool flatShaded, const bool animated )
 {
 	// load obj file
 	tinyobj::attrib_t attrib;
@@ -316,6 +316,11 @@ void HostMesh::LoadGeometryFromOBJ( const string& fileName, const char* director
 				tri.LOD = 0.5f * log2f( Ta / Pa );
 			}
 		}
+	}
+	if (animated)
+	{
+		isAnimated = animated;
+		printf("animation set\n");
 	}
 	printf( "verbose triangle data in %5.3fs\n", timer.elapsed() );
 }
