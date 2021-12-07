@@ -52,6 +52,7 @@ public:
 	void UpdatePhysics(const float dt);
 	int AnimationCount();
 	int PhysicsCount();
+	void InitPhysics(const int cloth, const int obs);
 	void SynchronizeSceneData();
 	void Render( Convergence converge, bool async = false );
 	void WaitForRender();

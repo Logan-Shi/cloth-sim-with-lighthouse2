@@ -44,6 +44,7 @@ typedef int tinygltfMaterial;
 typedef int tinyobjMaterial;
 #endif
 #include "host_texture.h"
+#include "host_physics.h"
 #include "host_material.h"
 #include "host_mesh.h"
 #include "host_light.h"
@@ -112,6 +113,7 @@ private:
 public:
 	// public data members
 	HostScene* scene = nullptr;				// scene I/O and management module
+	HostPhysics* physics = nullptr;         // physics
 	RenderSettings settings;				// render settings container
 };
 

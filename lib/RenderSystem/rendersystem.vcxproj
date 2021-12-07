@@ -11,6 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\physics\bvh\bbox.cpp" />
+    <ClCompile Include="..\physics\bvh\cudaBRT.cpp" />
+    <ClCompile Include="..\physics\GLSLShader.cpp" />
+    <ClCompile Include="..\physics\kdtree.cpp" />
+    <ClCompile Include="..\physics\Mesh.cpp" />
+    <ClCompile Include="..\physics\ObjLoader.cpp" />
+    <ClCompile Include="..\physics\Ray.cpp" />
+    <ClCompile Include="..\physics\scene.cpp" />
+    <ClCompile Include="..\physics\spring.cpp" />
+    <ClCompile Include="..\physics\Utilities.cpp" />
     <ClCompile Include="..\tinyxml2\tinyxml2.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderFile>
@@ -74,6 +84,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">rendersystem.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="host_physics.cpp" />
     <ClCompile Include="host_scene.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">rendersystem.h</PrecompiledHeaderFile>
@@ -136,6 +147,24 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\physics\bvh\bbox.h" />
+    <ClInclude Include="..\physics\bvh\bvh.h" />
+    <ClInclude Include="..\physics\bvh\cudaBRT.h" />
+    <ClInclude Include="..\physics\bvh\primitive.h" />
+    <ClInclude Include="..\physics\common.h" />
+    <ClInclude Include="..\physics\GLSLShader.h" />
+    <ClInclude Include="..\physics\kdtree.h" />
+    <ClInclude Include="..\physics\Mesh.h" />
+    <ClInclude Include="..\physics\ObjLoader.h" />
+    <ClInclude Include="..\physics\Ray.h" />
+    <ClInclude Include="..\physics\resource.h" />
+    <ClInclude Include="..\physics\scene.h" />
+    <ClInclude Include="..\physics\simulator.h" />
+    <ClInclude Include="..\physics\spring.h" />
+    <ClInclude Include="..\physics\Utilities.h" />
+    <ClInclude Include="..\physics\vao_buffer.h" />
+    <ClInclude Include="..\physics\watch.h" />
+    <ClInclude Include="..\physics\wglew.h" />
     <ClInclude Include="..\tinyxml2\tinyxml2.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="common_bluenoise.h" />
@@ -149,6 +178,7 @@
     <ClInclude Include="host_material.h" />
     <ClInclude Include="host_mesh.h" />
     <ClInclude Include="host_node.h" />
+    <ClInclude Include="host_physics.h" />
     <ClInclude Include="host_scene.h" />
     <ClInclude Include="host_skydome.h" />
     <ClInclude Include="host_texture.h" />
@@ -156,6 +186,13 @@
     <ClInclude Include="materials\pbrt\spectrum.h" />
     <ClInclude Include="rendersystem.h" />
     <ClInclude Include="render_api.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\physics\bvh\bvh.cu" />
+    <None Include="..\physics\bvh\cudaBRT.cu" />
+    <None Include="..\physics\bvh\primitive.cu" />
+    <None Include="..\physics\simulation.cu" />
+    <None Include="..\physics\verlet.cu" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{07290C5A-6E60-4C28-BEA7-FFFEA042E5CA}</ProjectGuid>
@@ -178,6 +215,9 @@
     <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 11.5.props" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -199,7 +239,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>RENDERSYSTEMBUILD;PBRT_IS_WINDOWS;WIN32;WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);.;../freeimage/inc;../zlib;../glfw/include;../glad/include;../half2.2.0;../tinyobjloader;../RenderCore_Prime;../tinyxml2;../platform;../tinygltf/rapidjson;../tinygltf;../taskflow</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);.;../freeimage/inc;../zlib;../glfw/include;../glad/include;../half2.2.0;../tinyobjloader;../RenderCore_Prime;../tinyxml2;../platform;../tinygltf/rapidjson;../tinygltf;../taskflow;../glm;../glew-cmake/include;../freeglut/include</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -219,6 +259,21 @@
       </AdditionalLibraryDirectories>
       <OutputFile>lib\$(Configuration)\$(TargetName)$(TargetExt)</OutputFile>
     </Lib>
+    <CudaCompile>
+      <Include>.;../freeimage/inc;../zlib;../glfw/include;../glad/include;../half2.2.0;../tinyobjloader;../RenderCore_Prime;../tinyxml2;../platform;../tinygltf/rapidjson;../tinygltf;../taskflow;../glm;../glew-cmake/include;../freeglut/include;%(Include)</Include>
+    </CudaCompile>
+    <CudaCompile>
+      <UseHostInclude>false</UseHostInclude>
+    </CudaCompile>
+    <CudaCompile>
+      <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
+    </CudaCompile>
+    <CudaCompile>
+      <TargetMachinePlatform>64</TargetMachinePlatform>
+      <Optimization>O2</Optimization>
+      <Runtime>MT</Runtime>
+      <TypeInfo>true</TypeInfo>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -252,4 +307,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 11.5.targets" />
+  </ImportGroup>
 </Project>

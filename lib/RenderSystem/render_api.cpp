@@ -136,6 +136,11 @@ void RenderAPI::SynchronizeSceneData()
 	renderer->SynchronizeSceneData();
 }
 
+void RenderAPI::InitPhysics(int cloth, int obs)
+{
+	renderer->physics->InitPhysics(renderer->scene->GetMesh(cloth), renderer->scene->GetMesh(obs));
+}
+
 void RenderAPI::UpdatePhysics(const float dt)
 {
 	renderer->UpdatePhysics(dt);

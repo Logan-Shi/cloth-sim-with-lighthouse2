@@ -317,11 +317,7 @@ void HostMesh::LoadGeometryFromOBJ( const string& fileName, const char* director
 			}
 		}
 	}
-	if (animated)
-	{
-		isAnimated = animated;
-		printf("animation set\n");
-	}
+	isAnimated = animated;
 	printf( "verbose triangle data in %5.3fs\n", timer.elapsed() );
 }
 

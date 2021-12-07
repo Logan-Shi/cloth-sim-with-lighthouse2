@@ -25,6 +25,7 @@ void RenderSystem::Init( const char* dllName )
 	core = CoreAPI_Base::CreateCoreAPI( dllName );
 	// create scene - load a scene using tinyobjloader
 	scene = new HostScene();
+	physics = new HostPhysics();
 	scene->Init();
 }
 
@@ -145,10 +146,8 @@ void RenderSystem::UpdatePhysics(const float dt)
 //  +-----------------------------------------------------------------------------+
 void RenderSystem::ClothPhysics(HostMesh* mesh, const float dt)
 {
-	for (int s = (int)mesh->vertices.size(), vertexIdx = 0; vertexIdx < s; vertexIdx++)
-	{
-		mesh->vertices[vertexIdx] += 0.01f;
-	}
+	physics->UpdatePhysics(dt);
+	mesh->vertices = physics->GetVertices();
 }
 
 

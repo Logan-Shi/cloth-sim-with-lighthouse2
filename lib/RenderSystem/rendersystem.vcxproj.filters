@@ -54,6 +54,39 @@
     <ClCompile Include="materials\pbrt\pbrtparser.cpp">
       <Filter>scene\pbrt</Filter>
     </ClCompile>
+    <ClCompile Include="host_physics.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="..\physics\GLSLShader.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\physics\kdtree.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\physics\Mesh.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\physics\ObjLoader.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\physics\Ray.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\physics\scene.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\physics\spring.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\physics\Utilities.cpp">
+      <Filter>physics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\physics\bvh\bbox.cpp">
+      <Filter>physics\bvh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\physics\bvh\cudaBRT.cpp">
+      <Filter>physics\bvh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="rendersystem.h" />
@@ -112,6 +145,63 @@
     <ClInclude Include="common_bluenoise.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="host_physics.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\common.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\GLSLShader.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\kdtree.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\Mesh.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\ObjLoader.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\Ray.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\resource.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\scene.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\simulator.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\spring.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\Utilities.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\vao_buffer.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\watch.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\wglew.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\bvh\bbox.h">
+      <Filter>physics\bvh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\bvh\bvh.h">
+      <Filter>physics\bvh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\bvh\cudaBRT.h">
+      <Filter>physics\bvh</Filter>
+    </ClInclude>
+    <ClInclude Include="..\physics\bvh\primitive.h">
+      <Filter>physics\bvh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="scene">
@@ -129,5 +219,28 @@
     <Filter Include="scene\pbrt">
       <UniqueIdentifier>{7527da49-fdab-4e25-991b-4026ec56e9c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="physics">
+      <UniqueIdentifier>{247d326b-9422-488e-9bd0-9cc48314e4c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="physics\bvh">
+      <UniqueIdentifier>{3cec5e39-37bb-458b-bb4d-654408b7476c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\physics\simulation.cu">
+      <Filter>physics</Filter>
+    </None>
+    <None Include="..\physics\verlet.cu">
+      <Filter>physics</Filter>
+    </None>
+    <None Include="..\physics\bvh\bvh.cu">
+      <Filter>physics\bvh</Filter>
+    </None>
+    <None Include="..\physics\bvh\cudaBRT.cu">
+      <Filter>physics\bvh</Filter>
+    </None>
+    <None Include="..\physics\bvh\primitive.cu">
+      <Filter>physics\bvh</Filter>
+    </None>
   </ItemGroup>
 </Project>

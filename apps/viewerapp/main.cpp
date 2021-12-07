@@ -34,7 +34,7 @@ static float3 arcStart;
 static int2 arcPivot;
 static mat4 matStart;
 static int arcInst = 0;
-static int plane, cloth = 0;
+static int plane, cloth, obs = 0;
 
 #include "main_tools.h"
 #include "main_ui.h"
@@ -155,7 +155,13 @@ void Initialize()
 	plane = renderer->AddQuad( make_float3( 0, 1, 0 ), make_float3( 0, -2, 0 ), 100, 100, floorMat );
 	renderer->AddInstance( plane );
 	renderer->DeserializeMaterials( "materials.xml" );
-	cloth = renderer->AddInstance(renderer->AddMesh("robe.obj", "../_shareddata/", 10.0f, false, true));
+	cloth = renderer->AddInstance(renderer->AddMesh("dress-victor.obj", "../_shareddata/", 1.0f, false, true));
+	//mat4 M = mat4::RotateX(-PI/2);
+	//renderer->SetNodeTransform(cloth, M);
+
+	obs = renderer->AddInstance(renderer->AddMesh("male.obj", "../_shareddata/", 1.0f, false, false));
+	renderer->SynchronizeSceneData();
+	renderer->InitPhysics(cloth, obs);
 
 	printf("loaded %d animations\n", renderer->AnimationCount());
 	printf("loaded %d physics\n", renderer->PhysicsCount());
