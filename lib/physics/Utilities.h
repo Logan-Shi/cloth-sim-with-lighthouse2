@@ -1,9 +1,6 @@
 #pragma once
 #include <vector>
 
-void getFPS();
-
-
 template<class Key>
 class SortAssistant
 {
@@ -31,7 +28,6 @@ void indices_sort(const Containers &keys, std::vector<unsigned int> &indices)
 
 }
 
-// 为支持更通用的情况，由用户确保indices的索引不超过keys的大小
 template<class Containers>
 void remove_redundant(const Containers &keys, std::vector<unsigned int> &indices)
 {
@@ -54,7 +50,6 @@ void remove_redundant(const Containers &keys, std::vector<unsigned int> &indices
 	indices.resize(n);
 }
 
-// 为支持更通用的情况，由用户确保indices的索引不超过keys的大小
 template<class Containers>
 void filter(const Containers &input, const std::vector<unsigned int> &indices, Containers &ouput)
 {

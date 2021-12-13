@@ -2,10 +2,7 @@
 #include <vector>
 #include <string>
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-
-#include "vao_buffer.h"
+#include <../glm/glm/glm.hpp>
 
 using namespace std;
 
@@ -22,13 +19,12 @@ public:
 	ObjLoader(const string file);
 
 public:
-	GLuint g_textureID;
-
 	string obj_file;                
 	string mtl_file;
 	string texture_file;
 
 	vector<glm::vec4> vertices; 
+	vector<glm::vec3> onestep_vertices;
 	vector<glm::vec3> normals;
 	vector<glm::vec2> tex;
 	vector<Face> faces;

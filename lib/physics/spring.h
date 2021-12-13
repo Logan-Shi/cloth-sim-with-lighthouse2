@@ -1,7 +1,6 @@
 #pragma once
-#include "Mesh.h"
+#include "bvh/bvh.h"
 #include <set>
-#include <vector>
 #include <map>
 
 //simplified spring for gpu
@@ -16,7 +15,6 @@ class Springs
 public:
 	~Springs();
 	Springs(Mesh* spring_obj);  //创建两级邻域，boundary and cloth弹簧劲度系数一致
-	void draw(Mesh* spring_obj);
 	void CSR_structure_spring(Mesh* spring_obj, vector<unsigned int>& CSR_R, vector<s_spring>& CSR_C);
 	void CSR_bend_spring(Mesh* spring_obj, vector<unsigned int>& CSR_R, vector<s_spring>& CSR_C);
 

@@ -155,7 +155,7 @@ void Initialize()
 	plane = renderer->AddQuad( make_float3( 0, 1, 0 ), make_float3( 0, -2, 0 ), 100, 100, floorMat );
 	renderer->AddInstance( plane );
 	renderer->DeserializeMaterials( "materials.xml" );
-	cloth = renderer->AddInstance(renderer->AddMesh("dress-victor.obj", "../_shareddata/", 1.0f, false, true));
+	cloth = renderer->AddInstance(renderer->AddMesh("Cloth.obj", "../_shareddata/Cloth/", 1.0f, false, true));
 	//mat4 M = mat4::RotateX(-PI/2);
 	//renderer->SetNodeTransform(cloth, M);
 

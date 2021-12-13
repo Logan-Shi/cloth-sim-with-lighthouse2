@@ -1,7 +1,7 @@
 #include "primitive.h"
 
 Primitive::Primitive(): vertices(nullptr), d_vertices(nullptr) {}
-Primitive::Primitive(const glm::vec3* _vertices, const glm::vec3* _d_vertices, const uint _v0, const uint _v1, const uint _v2)
+Primitive::Primitive(const glm::vec3* _vertices, const glm::vec3* _d_vertices, const unsigned int _v0, const unsigned int _v1, const unsigned int _v2)
 	:vertices(_vertices), d_vertices(_d_vertices), v0(_v0), v1(_v1), v2(_v2) {}
 
 BBox Primitive::get_bbox() const

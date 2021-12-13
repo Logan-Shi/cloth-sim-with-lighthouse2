@@ -1,17 +1,11 @@
-
 #include "simulator.h"
-#include "spring.h"
-#include "Mesh.h"
-#include <cuda_runtime.h>
-#include <cuda_gl_interop.h>
+
 #include <iostream>
 #include <fstream>
-
 #include "watch.h"
-#include "common.h"
 
 using namespace std;
-
+vector<glm::vec3> test(10000);
 __global__ void compute_face_normal(glm::vec3* g_pos_in, unsigned int* cloth_index, const unsigned int cloth_index_size, glm::vec3* cloth_face);   //update cloth face normal
 __global__ void verlet(glm::vec3 * g_pos_in, glm::vec3 * g_pos_old_in, glm::vec3 * g_pos_out, glm::vec3 * g_pos_old_out,
 						unsigned int* CSR_R_STR, s_spring* CSR_C_STR, unsigned int* CSR_R_BD, s_spring* CSR_C_BD,
@@ -53,10 +47,6 @@ Simulator::Simulator(Mesh& sim_cloth, Mesh& body) :readID(0), writeID(1)
 
 void Simulator::init_cloth(Mesh& sim_cloth)
 {
-	// \d_vbo_array_resource points to cloth's array buffer  
-	safe_cuda(cudaGraphicsGLRegisterBuffer(&d_vbo_array_resource, sim_cloth.vbo.array_buffer, cudaGraphicsMapFlagsWriteDiscard));   	//register vbo
-
-
 	//set heap size, the default is 8M
 	size_t heap_size = 256 * 1024 * 1024;  
 	cudaDeviceSetLimit(cudaLimitMallocHeapSize, heap_size);
@@ -84,6 +74,10 @@ void Simulator::init_cloth(Mesh& sim_cloth)
 	safe_cuda(cudaMemcpy(x_cur[0], &tem_vertices[0], vertices_bytes, cudaMemcpyHostToDevice));
 	safe_cuda(cudaMemcpy(x_last[0], &tem_vertices[0], vertices_bytes, cudaMemcpyHostToDevice));
 
+
+	//cudaMemcpy(&test[0], x_cur[0], sizeof(glm::vec3) * sim_cloth.vertices.size(), cudaMemcpyDeviceToHost);
+	//cudaMemcpy(&test, x_cur[1], sizeof(glm::vec3), cudaMemcpyDeviceToHost);
+	//cudaMemcpy(&test, d_collision_force, sizeof(glm::vec3)+1, cudaMemcpyDeviceToHost);
 	//计算normal所需的数据：每个点邻接的面的索引 + 每个面的3个点的索引
 	vector<unsigned int> TEM_CSR_R;
 	vector<unsigned int> TEM_CSR_C_adjface;
@@ -95,8 +89,6 @@ void Simulator::init_cloth(Mesh& sim_cloth)
 	safe_cuda(cudaMemcpy(d_CSR_C_adjface_to_vertex, &TEM_CSR_C_adjface[0], sizeof(unsigned int) * TEM_CSR_C_adjface.size(), cudaMemcpyHostToDevice));
 	
 	safe_cuda(cudaMalloc((void**)&d_face_normals, sizeof(glm::vec3) * sim_cloth.faces.size()));    //face normal
-
-	safe_cuda(cudaGraphicsGLRegisterBuffer(&d_vbo_index_resource, sim_cloth.vbo.index_buffer, cudaGraphicsMapFlagsWriteDiscard));   	//register vbo
 }
 
 void Simulator::init_spring(Mesh& sim_cloth)
@@ -141,11 +133,19 @@ void Simulator::build_bvh(Mesh& body)
 void Simulator::simulate(Mesh* sim_cloth)
 {
 	//cuda kernel compute .........
-	
+	/*
+	for (int i = 0; i<1000; i++)
+	{
+		cuda_verlet(sim_cloth->vertices.size());
+		//cuda_update_vbo(sim_cloth);     // update array buffer for opengl
+		cudaMemcpy(&test[0], x_cur_out, sizeof(glm::vec3) * sim_cloth->vertices.size(), cudaMemcpyDeviceToHost);
+		swap_buffer();
+	}
+	*/
 	cuda_verlet(sim_cloth->vertices.size());
-
-	cuda_update_vbo(sim_cloth);     // update array buffer for opengl
-
+	//	cuda_update_vbo(sim_cloth);     // update array buffer for opengl
+	//test.resize(sim_cloth->vertices.size());
+	cudaMemcpy(&sim_cloth->onestep_vertices[0], x_cur_out, sizeof(glm::vec3) * sim_cloth->vertices.size(), cudaMemcpyDeviceToHost);
 	swap_buffer();
 }
 
@@ -191,47 +191,6 @@ void Simulator::cuda_verlet(const unsigned int numParticles)
 
 	// stop the CPU until the kernel has been executed
 	safe_cuda(cudaDeviceSynchronize());
-}
-
-void Simulator::cuda_update_vbo(Mesh* sim_cloth)
-{
-	unsigned int numParticles = sim_cloth->vertices.size();
-
-	size_t num_bytes;
-	glm::vec4* d_vbo_vertex;           //point to vertex address in the OPENGL buffer
-	glm::vec3* d_vbo_normal;           //point to normal address in the OPENGL buffer
-	unsigned int* d_adjvertex_to_face;    // the order like this: f0(v0,v1,v2) -> f1(v0,v1,v2) -> ... ->fn(v0,v1,v2)
-	
-	safe_cuda(cudaGraphicsMapResources(1, &d_vbo_array_resource));
-	safe_cuda(cudaGraphicsMapResources(1, &d_vbo_index_resource));
-	safe_cuda(cudaGraphicsResourceGetMappedPointer((void **)&d_vbo_vertex, &num_bytes, d_vbo_array_resource));
-	safe_cuda(cudaGraphicsResourceGetMappedPointer((void **)&d_adjvertex_to_face, &num_bytes, d_vbo_index_resource));
-
-	d_vbo_normal = (glm::vec3*)((float*)d_vbo_vertex + 4 * sim_cloth->vertices.size() + 2 * sim_cloth->tex.size());   // 获取normal位置指针	
-
-	unsigned int numThreads, numBlocks;
-
-	// update vertex position
-	computeGridSize(numParticles, 512, numBlocks, numThreads);
-	update_vbo_pos << < numBlocks, numThreads >> > (d_vbo_vertex, x_cur_out, numParticles);
-	safe_cuda(cudaDeviceSynchronize());  	// stop the CPU until the kernel has been executed
-
-	// we need to compute face normal before computing vbo normal
-	computeGridSize(sim_cloth->faces.size(), 512, numBlocks, numThreads);
-	compute_face_normal << <numBlocks, numThreads >> > (x_cur_in, d_adjvertex_to_face, sim_cloth->vertex_indices.size(), d_face_normals);
-	safe_cuda(cudaDeviceSynchronize());
-
-	// update vertex normal
-	computeGridSize(numParticles, 1024, numBlocks, numThreads);
-	compute_vbo_normal << < numBlocks, numThreads >> > (d_vbo_normal, d_CSR_R, d_CSR_C_adjface_to_vertex, d_face_normals ,numParticles);
-	safe_cuda(cudaDeviceSynchronize());
-
-	safe_cuda(cudaGraphicsUnmapResources(1, &d_vbo_index_resource));
-	safe_cuda(cudaGraphicsUnmapResources(1, &d_vbo_array_resource));
-}
-
-void Simulator::save(string file_name)
-{
 }
 
 void Simulator::computeGridSize(unsigned int n, unsigned int blockSize, unsigned int &numBlocks, unsigned int &numThreads)

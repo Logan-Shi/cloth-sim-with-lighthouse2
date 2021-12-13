@@ -1,12 +1,8 @@
 #pragma once
-#include <vector> 
 
-#include "bbox.h"
 #include "primitive.h"
 #include "cudaBRT.h"
-#include "../ObjLoader.h"
 #include "../Mesh.h"
-
 
 using MortonCode = unsigned int;
 

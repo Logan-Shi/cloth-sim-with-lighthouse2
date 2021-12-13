@@ -1,14 +1,12 @@
 #pragma once
-#include "BBox.h"
-#include <glm/glm.hpp>
-#define uint unsigned int
+#include "bbox.h"
 
 //here primitive refer to triangle
 class Primitive      
 {
 public:
 	Primitive();
-	Primitive(const glm::vec3* _vertices, const glm::vec3* _d_vertices, const uint _v0, const uint _v1, const uint _v2);
+	Primitive(const glm::vec3* _vertices, const glm::vec3* _d_vertices, const unsigned int _v0, const unsigned int _v1, const unsigned int _v2);
 	/**
 	* Get the world space bounding box of the primitive.
 	* \return world space bounding box of the primitive
@@ -34,7 +32,7 @@ public:
 public:
 	const glm::vec3* vertices;  
 	const glm::vec3* d_vertices;  //for device, ptr to body vertices
-	uint v0;
-	uint v1;
-	uint v2;
+	unsigned int v0;
+	unsigned int v1;
+	unsigned int v2;
 };

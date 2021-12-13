@@ -9,7 +9,6 @@
  }\
 }
 
-
 /**
 * alloc a memory on gpu and copy data from cpu to gpu.
 */

@@ -4,9 +4,6 @@
 #include <sstream>
 
 #include <Windows.h>
-#include <FreeImage.h>
-#include <GL/glew.h>
-#include <GL/freeglut.h>
 
 #include "ObjLoader.h"
 
@@ -172,46 +169,7 @@ ObjLoader::ObjLoader(const string file):obj_file(file)
 		}
 	}
 
-
-	if(!texture_file.empty()) // load .png and you need to initilize opengl before load
-	{
-		string path = obj_file.substr(0,obj_file.find_last_of("/")+1);
-		texture_file = path + texture_file;
-		FIBITMAP *dib = FreeImage_Load(FIF_PNG,texture_file.c_str(), PNG_DEFAULT);
-
-		if (FreeImage_GetBPP(dib) != 32) 
-		{
-			FIBITMAP* tempImage = dib;
-			dib = FreeImage_ConvertTo32Bits(tempImage);
-		}
-
-		if (dib != NULL)
-		{
-			glGenTextures(1, &g_textureID);
-			glBindTexture(GL_TEXTURE_2D, g_textureID);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-			BYTE *bits = new BYTE[FreeImage_GetWidth(dib) * FreeImage_GetHeight(dib) * 4];
-			BYTE *pixels = (BYTE*) FreeImage_GetBits(dib);
-
-			for (int pix = 0; pix<FreeImage_GetWidth(dib) * FreeImage_GetHeight(dib); pix++)
-			{
-				bits[pix * 4 + 0] = pixels[pix * 4 + 2];
-				bits[pix * 4 + 1] = pixels[pix * 4 + 1];
-				bits[pix * 4 + 2] = pixels[pix * 4 + 0];
-				bits[pix * 4 + 3] = pixels[pix * 4 + 3]; 
-			}
-
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, FreeImage_GetWidth(dib), FreeImage_GetHeight(dib), 0,GL_RGBA, GL_UNSIGNED_BYTE, bits);
-
-			FreeImage_Unload(dib);
-			delete bits;
-		}
-		cout << file << " load successfully!" << endl;
-	}
-
 	cout << "vertices size" << vertices.size() << endl;
-
+	onestep_vertices.resize(vertices.size());
 }
 

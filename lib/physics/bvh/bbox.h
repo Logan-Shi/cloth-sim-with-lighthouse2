@@ -1,7 +1,6 @@
 #pragma once
 #include <cuda_runtime.h>
-#include <glm/glm.hpp>
-#include <iostream>
+#include <../glm/glm/glm.hpp>
 
 struct BBox
 {
@@ -89,11 +88,6 @@ struct BBox
 			(point.z >= min.z && point.z <= max.z);
 	}
 
-	/**
-	* Draw box wireframe with OpenGL.
-	*/
-	void draw() const;
-	void print() const;
 	__host__ __device__
 	glm::vec3 centroid() const {
 		glm::vec3 sum = min + max;

@@ -11,16 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\physics\bvh\bbox.cpp" />
-    <ClCompile Include="..\physics\bvh\cudaBRT.cpp" />
-    <ClCompile Include="..\physics\GLSLShader.cpp" />
     <ClCompile Include="..\physics\kdtree.cpp" />
     <ClCompile Include="..\physics\Mesh.cpp" />
     <ClCompile Include="..\physics\ObjLoader.cpp" />
-    <ClCompile Include="..\physics\Ray.cpp" />
     <ClCompile Include="..\physics\scene.cpp" />
     <ClCompile Include="..\physics\spring.cpp" />
-    <ClCompile Include="..\physics\Utilities.cpp" />
     <ClCompile Include="..\tinyxml2\tinyxml2.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
       </PrecompiledHeaderFile>
@@ -152,19 +147,15 @@
     <ClInclude Include="..\physics\bvh\cudaBRT.h" />
     <ClInclude Include="..\physics\bvh\primitive.h" />
     <ClInclude Include="..\physics\common.h" />
-    <ClInclude Include="..\physics\GLSLShader.h" />
     <ClInclude Include="..\physics\kdtree.h" />
     <ClInclude Include="..\physics\Mesh.h" />
     <ClInclude Include="..\physics\ObjLoader.h" />
-    <ClInclude Include="..\physics\Ray.h" />
     <ClInclude Include="..\physics\resource.h" />
     <ClInclude Include="..\physics\scene.h" />
     <ClInclude Include="..\physics\simulator.h" />
     <ClInclude Include="..\physics\spring.h" />
     <ClInclude Include="..\physics\Utilities.h" />
-    <ClInclude Include="..\physics\vao_buffer.h" />
     <ClInclude Include="..\physics\watch.h" />
-    <ClInclude Include="..\physics\wglew.h" />
     <ClInclude Include="..\tinyxml2\tinyxml2.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="common_bluenoise.h" />
@@ -229,6 +220,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>lib\$(Configuration)\</OutDir>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>lib\$(Configuration)\</OutDir>
@@ -239,7 +231,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>RENDERSYSTEMBUILD;PBRT_IS_WINDOWS;WIN32;WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);.;../freeimage/inc;../zlib;../glfw/include;../glad/include;../half2.2.0;../tinyobjloader;../RenderCore_Prime;../tinyxml2;../platform;../tinygltf/rapidjson;../tinygltf;../taskflow;../glm;../glew-cmake/include;../freeglut/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);.;../freeimage/inc;../zlib;../glfw/include;../glad/include;../half2.2.0;../tinyobjloader;../RenderCore_Prime;../tinyxml2;../platform;../tinygltf/rapidjson;../tinygltf;../taskflow;../glew-cmake/include;../freeglut/include;$(CudaToolkitIncludeDir)</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -273,6 +265,7 @@
       <Optimization>O2</Optimization>
       <Runtime>MT</Runtime>
       <TypeInfo>true</TypeInfo>
+      <Defines>%(Defines);_WINDOWS;GLEW_STATIC;WIN32_MEAN_AND_LEAN;VC_EXTRALEAN;_CRT_SECURE_NO_WARNINGS;GLEW_NO_GLU;CMAKE_INTDIR="Debug"</Defines>
     </CudaCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

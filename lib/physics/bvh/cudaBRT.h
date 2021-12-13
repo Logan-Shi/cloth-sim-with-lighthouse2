@@ -1,9 +1,7 @@
 #pragma once
-#include<cuda_runtime.h>
-#include "bbox.h"
-#include "../common.h"
-#include "./primitive.h"
 
+#include "primitive.h"
+#include "../common.h"
 
 #define DEFAULT_THREAD_PER_BLOCK 1024
 

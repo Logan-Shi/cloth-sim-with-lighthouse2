@@ -16,8 +16,8 @@ Mesh::Mesh(string file_name, cloth_type type):mesh_type(type)
 
 void Mesh::unified(ObjLoader& Obj)
 {
-	g_textureID = Obj.g_textureID;
 	vertices = Obj.vertices;
+	onestep_vertices = Obj.onestep_vertices;
 	tex.resize(vertices.size());
 	normals.resize(vertices.size());
 	faces = Obj.faces;

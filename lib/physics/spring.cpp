@@ -251,38 +251,6 @@ void Springs::get_boundary_boundary_spring(Mesh* spring_obj)
 
 }
 
-void Springs::draw(Mesh* spring_obj)
-{
-	for (int i = 0; i < neigh1.size(); i++)
-	{
-		glm::vec4 v1 = spring_obj->vertices[i];
-		for (int j = 0; j < neigh1[i].size(); j++)
-		{
-			glm::vec4 v2 = spring_obj->vertices[neigh1[i][j]];
-	
-			glBegin(GL_LINES);
-			glColor3f(1.0, 1.0, 1.0);
-			glVertex3f(v1.x, v1.y, v1.z);
-			glVertex3f(v2.x, v2.y, v2.z);
-			glEnd();
-		}
-	}
-
-	for (int i = 0; i < neigh2.size(); i++)
-	{
-		glm::vec4 v1 = spring_obj->vertices[i];
-		for (int j = 0; j < neigh2[i].size(); j++)
-		{
-			glm::vec4 v2 = spring_obj->vertices[neigh2[i][j]];
-			glBegin(GL_LINES);
-			glColor3f(1.0, 0, 0);
-			glVertex3f(v1.x, v1.y, v1.z);
-			glVertex3f(v2.x, v2.y, v2.z);
-			glEnd();
-		}
-	}
-}
-
 void Springs::create_neigh(Mesh* spring_obj)
 {
 

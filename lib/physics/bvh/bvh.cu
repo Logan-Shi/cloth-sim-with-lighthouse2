@@ -1,5 +1,5 @@
 #include "bvh.h"
-#include "primitive.h"
+
 #include "../watch.h"
 #include <iostream>
 #include <fstream>
@@ -9,7 +9,6 @@
 #include <thrust/execution_policy.h>
 
 #include "../Utilities.h"
-#include "../common.h"
 
 using namespace std;
 extern inline void copyFromCPUtoGPU(void** dst, void* src, int size);

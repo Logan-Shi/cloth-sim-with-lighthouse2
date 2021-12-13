@@ -1,13 +1,7 @@
-
-#include "./bvh/bvh.h"
 #include "spring.h"
-#include <cuda.h>
-#include <device_functions.h>
-#include <cuda_runtime.h>
-#include <device_launch_parameters.h>
-#include <glm/glm.hpp>
-
-
+//#include <cuda.h>
+//#include <device_functions.h>
+//#include <device_launch_parameters.h>
 
 //physics parameter
 __constant__ double spring_structure = 1000.0;

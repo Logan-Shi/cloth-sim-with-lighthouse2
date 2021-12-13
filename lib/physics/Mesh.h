@@ -36,12 +36,10 @@ public:
 	vector<glm::vec4> vertices;            
 	vector<glm::vec2> tex;
 	vector<glm::vec3> normals;
+	vector<glm::vec3> onestep_vertices;
 
 	vector<unsigned int> vertex_indices;           // unified the index for render
 	vector<Face> faces;
-
-	GLuint g_textureID;
-	VAO_Buffer vbo;
 
 	vector<pair<string, unsigned int>> vertex_object;  //for vertices region division 
 	vector<pair<string, unsigned int>> face_group;
