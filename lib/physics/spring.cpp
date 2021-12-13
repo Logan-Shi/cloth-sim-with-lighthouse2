@@ -4,7 +4,7 @@
 #include <set>
 #include <algorithm>
 #include <iostream>
-#include <cuda_runtime.h>
+//#include <cuda_runtime.h>
 
 using namespace std;
 
@@ -207,48 +207,6 @@ void Springs::get_boundary_boundary_spring(Mesh* spring_obj)
 	{
 		boundary.insert(make_pair(map_spring[spring.first],map_spring[spring.second]));
 	}
-
-
-
-
-
-
-
-
-	////FR->_Piece2
-	//vector<pair<unsigned int,unsigned int>> start_end;
-	//int start = 0;
-	//for(int n=0;n<spring_obj->vertex_object.size();n++)
-	//{
-	//	start_end.push_back(make_pair(start,start+spring_obj->vertex_object[n].second));
-	//	start += spring_obj->vertex_object[n].second;
-	//}
-	//unsigned int *idx = new unsigned int[spring_obj->uni_vertices.size()]; 
-	//kdtree *kd = k create(3);
-	//for (int i=start_end[8].first;i<start_end[8].second;i++)   //为面片1建立kdtree
-	//	{
-	//		idx[i] = i;
-	//		int ret = k insert3f(kd, spring_obj->uni_vertices[i].x,
-	//			spring_obj->uni_vertices[i].y,
-	//			spring_obj->uni_vertices[i].z,
-	//			&idx[i]);
-	//	}
-
-	//for(int i=start_end[1].first;i<start_end[1].second;i++)
-	//{
-	//	float kdpos[3];
-	//		kdres *result = k nearest3f(kd, spring_obj->uni_vertices[i].x,
-	//			spring_obj->uni_vertices[i].y,
-	//			spring_obj->uni_vertices[i].z);
-	//		int *resultidx = (int*)k res_itemf(result, kdpos);
-
-	//		if (glm::distance(spring_obj->uni_vertices[i],spring_obj->uni_vertices[*resultidx]) < max_dist*20) //加入距离判断，防止错连
-	//		{
-	//			boundary_boundary_springs.push_back(make_pair(i,*resultidx));
-	//		}
-	//}
-
-
 }
 
 void Springs::create_neigh(Mesh* spring_obj)

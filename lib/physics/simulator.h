@@ -11,7 +11,6 @@ public:
 	void simulate(Mesh* cloth);
 	void update_vertex(glm::vec3 new_value, const unsigned int idx);
 
-
 private:
 	void init_cloth(Mesh& cloth);
 	void init_spring(Mesh& cloth);
@@ -23,8 +22,8 @@ private:
 	void swap_buffer();
 
 private:
-	cudaGraphicsResource* d_vbo_array_resource;  //map OPENGL array buffer to cuda
-	cudaGraphicsResource* d_vbo_index_resource;  //map OPENGL index buffer to cuda
+	//cudaGraphicsResource* d_vbo_array_resource;  //map OPENGL array buffer to cuda
+	//cudaGraphicsResource* d_vbo_index_resource;  //map OPENGL index buffer to cuda
 
 	// springs
 	// i-th start index = CSR_R[i], i-th end index = CSR_R[i+1] 

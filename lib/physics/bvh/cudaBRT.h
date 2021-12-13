@@ -32,74 +32,74 @@
 struct BRTreeNode
 {
 public:
-	__host__ __device__
-	   BRTreeNode() :childA(0), childB(0), parent(0), idx(0), counter(0) {}
+	//__host__ __device__
+	//   BRTreeNode() :childA(0), childB(0), parent(0), idx(0), counter(0) {}
 
 	/*getters and setters for encoding and decoding*/
-	__host__ __device__
-		inline void setChildA(int _childA, bool is_leaf)
-	{
-		if (is_leaf) { childA = -_childA - 1; }
-		else { childA = _childA + 1; }
-	}
+	//__host__ __device__
+	//	inline void setChildA(int _childA, bool is_leaf)
+	//{
+	//	if (is_leaf) { childA = -_childA - 1; }
+	//	else { childA = _childA + 1; }
+	//}
 
-	__host__ __device__
-		inline void setChildB(int _childB, bool is_leaf)
-	{
-		if (is_leaf) { childB = -_childB - 1; }
-		else { childB = _childB + 1; }
-	}
+	//__host__ __device__
+	//	inline void setChildB(int _childB, bool is_leaf)
+	//{
+	//	if (is_leaf) { childB = -_childB - 1; }
+	//	else { childB = _childB + 1; }
+	//}
 
-	__host__ __device__
-		inline void setParent(int _parent)
-	{
-		parent = _parent + 1;
-	}
+	//__host__ __device__
+	//	inline void setParent(int _parent)
+	//{
+	//	parent = _parent + 1;
+	//}
 
-	__host__ __device__
-		inline void setIdx(int _idx)
-	{
-		idx = _idx;
-	}
+	//__host__ __device__
+	//	inline void setIdx(int _idx)
+	//{
+	//	idx = _idx;
+	//}
 
-	__host__ __device__
-		inline int getChildA(bool& is_leaf, bool& is_null)
-	{
-		if (childA == 0) { is_null = true; return -1; } is_null = false; is_leaf = childA < 0; if (is_leaf) return -(childA + 1); else return childA - 1;
-	}
+	//__host__ __device__
+	//	inline int getChildA(bool& is_leaf, bool& is_null)
+	//{
+	//	if (childA == 0) { is_null = true; return -1; } is_null = false; is_leaf = childA < 0; if (is_leaf) return -(childA + 1); else return childA - 1;
+	//}
 
-	__host__ __device__
-		inline int getChildB(bool& is_leaf, bool& is_null)
-	{
-		if (childB == 0) { is_null = true; return -1; } is_null = false; is_leaf = childB < 0; if (is_leaf) return -(childB + 1); else return childB - 1;
-	}
+	//__host__ __device__
+	//	inline int getChildB(bool& is_leaf, bool& is_null)
+	//{
+	//	if (childB == 0) { is_null = true; return -1; } is_null = false; is_leaf = childB < 0; if (is_leaf) return -(childB + 1); else return childB - 1;
+	//}
 
-	__host__ __device__
-		inline int getParent(bool& is_null)
-	{
-		if (parent == 0) { is_null = true; return -1; } is_null = false; return parent - 1;
-	}
+	//__host__ __device__
+	//	inline int getParent(bool& is_null)
+	//{
+	//	if (parent == 0) { is_null = true; return -1; } is_null = false; return parent - 1;
+	//}
 
-	__host__ __device__
-		inline int getIdx() { return idx; }
+	//__host__ __device__
+	//	inline int getIdx() { return idx; }
 
-	__host__
-		void printInfo()
-	{
-		bool is_leaf = false;
-		bool is_null = false;
-		int index = 0;
+	//__host__
+	//	void printInfo()
+	//{
+	//	bool is_leaf = false;
+	//	bool is_null = false;
+	//	int index = 0;
 
-		printf("-----\n");
-		index = getChildA(is_leaf, is_null);
-		printf("childA:(%d,%d,%d)\n", index, is_leaf, !is_null);
-		index = getChildB(is_leaf, is_null);
-		printf("childB:(%d,%d,%d)\n", index, is_leaf, !is_null);
-		index = getParent(is_null);
-		printf("parent:(%d,%d)\n", index, !is_null);
-		index = getIdx();
-		printf("index:%d\n", index);
-	}
+	//	printf("-----\n");
+	//	index = getChildA(is_leaf, is_null);
+	//	printf("childA:(%d,%d,%d)\n", index, is_leaf, !is_null);
+	//	index = getChildB(is_leaf, is_null);
+	//	printf("childB:(%d,%d,%d)\n", index, is_leaf, !is_null);
+	//	index = getParent(is_null);
+	//	printf("parent:(%d,%d)\n", index, !is_null);
+	//	index = getIdx();
+	//	printf("index:%d\n", index);
+	//}
 
 public:
 	unsigned int counter;
@@ -115,7 +115,7 @@ private:
 class D_BVH
 {
 public:
-	__host__ __device__
+	/*__host__ __device__
 		D_BVH();
 	__host__ __device__
 		D_BVH(Primitive* _d_primitives,
@@ -132,7 +132,7 @@ public:
 	__device__ BRTreeNode*  get_left_child(BRTreeNode* node);
 	__device__ BRTreeNode*  get_right_child(BRTreeNode* node);
 	__device__ bool  is_leaf(BRTreeNode* node);
-	__device__ bool  check_overlap(const glm::vec3 point, BRTreeNode* node);
+	__device__ bool  check_overlap(const glm::vec3 point, BRTreeNode* node);*/
 	
 
 public:
@@ -142,12 +142,12 @@ public:
 };
 
 
-__global__  void processInternalNode(unsigned int* sorted_morton_code, int numInternalNode,
-	BRTreeNode* leafNodes,
-	BRTreeNode* internalNodes);
+//__global__  void processInternalNode(unsigned int* sorted_morton_code, int numInternalNode,
+//	BRTreeNode* leafNodes,
+//	BRTreeNode* internalNodes);
 
 /**
 * construct bounding boxes from leaf up to root
 */
-__global__  void calculateBoudingBox(BBox* d_bboxes, int numLeafNode,
-	BRTreeNode* leafNodes, BRTreeNode* internalNodes);
+//__global__  void calculateBoudingBox(BBox* d_bboxes, int numLeafNode,
+//	BRTreeNode* leafNodes, BRTreeNode* internalNodes);

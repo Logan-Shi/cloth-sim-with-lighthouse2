@@ -6,11 +6,11 @@ Primitive::Primitive(const glm::vec3* _vertices, const glm::vec3* _d_vertices, c
 
 BBox Primitive::get_bbox() const
 {
-	BBox bbox = (vertices[v0]);
-	bbox.expand(vertices[v1]);
-	bbox.expand(vertices[v2]);
+	//BBox bbox = (vertices[v0]);
+	//bbox.expand(vertices[v1]);
+	//bbox.expand(vertices[v2]);
 
-	return bbox;
+	//return bbox;
 }
 
 BBox Primitive::get_expand_bbox() const
@@ -20,35 +20,35 @@ BBox Primitive::get_expand_bbox() const
 	//沿着法线方向适当拓展或收缩三角面片,后期改为点的各自法线方向
 	float depth = 0.01;
 	glm::vec3 n = get_normal();
-	bbox.expand(vertices[v0] - depth*n);
-	bbox.expand(vertices[v1] - depth*n);
-	bbox.expand(vertices[v2] - depth*n);
+	//bbox.expand(vertices[v0] - depth*n);
+	//bbox.expand(vertices[v1] - depth*n);
+	//bbox.expand(vertices[v2] - depth*n);
 
 	return bbox;
 }
 
-BBox  Primitive::d_get_bbox() const
-{
-	BBox bbox(d_vertices[v0]);
-	bbox.expand(d_vertices[v1]);
-	bbox.expand(d_vertices[v2]);
+//BBox  Primitive::d_get_bbox() const
+//{
+//	BBox bbox(d_vertices[v0]);
+//	bbox.expand(d_vertices[v1]);
+//	bbox.expand(d_vertices[v2]);
+//
+//	return bbox;
+//}
 
-	return bbox;
-}
-
-BBox  Primitive::d_get_expand_bbox() const
-{
-	BBox bbox = d_get_bbox();
-	
-	//沿着法线方向适当拓展或收缩三角面片,后期改为点的各自法线方向
-	float depth = 0.01;
-	glm::vec3 n = d_get_normal();
-	bbox.expand(d_vertices[v0] - depth * n);
-	bbox.expand(d_vertices[v1] - depth * n);
-	bbox.expand(d_vertices[v2] - depth * n);
-
-	return bbox;
-}
+//BBox  Primitive::d_get_expand_bbox() const
+//{
+//	BBox bbox = d_get_bbox();
+//	
+//	//沿着法线方向适当拓展或收缩三角面片,后期改为点的各自法线方向
+//	float depth = 0.01;
+//	glm::vec3 n = d_get_normal();
+//	bbox.expand(d_vertices[v0] - depth * n);
+//	bbox.expand(d_vertices[v1] - depth * n);
+//	bbox.expand(d_vertices[v2] - depth * n);
+//
+//	return bbox;
+//}
 
 bool Primitive::intersect(const glm::vec3& point) const
 {
@@ -67,22 +67,22 @@ bool Primitive::intersect(const glm::vec3& point) const
 	return false;
 }
 
-bool Primitive::d_intersect(const glm::vec3& point, float &dist, glm::vec3 &normal) const
-{
-	//use normal or barycentric coordinates
-	glm::vec3 side1, side2, normalface;
-	side1 = d_vertices[v1] - d_vertices[v0];
-	side2 = d_vertices[v2] - d_vertices[v0];
-	normalface = glm::cross(side1, side2);
-	normal = glm::normalize(normalface);
-
-	glm::vec3 tem = point - d_vertices[v0];
-	dist = glm::dot(tem, normal);
-	if (dist > 0)
-		return false;
-
-	return true;
-}
+//bool Primitive::d_intersect(const glm::vec3& point, float &dist, glm::vec3 &normal) const
+//{
+//	//use normal or barycentric coordinates
+//	glm::vec3 side1, side2, normalface;
+//	side1 = d_vertices[v1] - d_vertices[v0];
+//	side2 = d_vertices[v2] - d_vertices[v0];
+//	normalface = glm::cross(side1, side2);
+//	normal = glm::normalize(normalface);
+//
+//	glm::vec3 tem = point - d_vertices[v0];
+//	dist = glm::dot(tem, normal);
+//	if (dist > 0)
+//		return false;
+//
+//	return true;
+//}
 
 glm::vec3 Primitive::get_normal() const
 {
@@ -93,11 +93,11 @@ glm::vec3 Primitive::get_normal() const
 	return glm::normalize(normalface);
 }
 
-glm::vec3 Primitive::d_get_normal() const
-{
-	glm::vec3 side1, side2, normalface;
-	side1 = d_vertices[v1] - d_vertices[v0];
-	side2 = d_vertices[v2] - d_vertices[v0];
-	normalface = glm::cross(side1, side2);
-	return glm::normalize(normalface);
-}
+//glm::vec3 Primitive::d_get_normal() const
+//{
+//	glm::vec3 side1, side2, normalface;
+//	side1 = d_vertices[v1] - d_vertices[v0];
+//	side2 = d_vertices[v2] - d_vertices[v0];
+//	normalface = glm::cross(side1, side2);
+//	return glm::normalize(normalface);
+//}

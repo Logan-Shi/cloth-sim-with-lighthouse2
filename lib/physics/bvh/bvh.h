@@ -1,6 +1,5 @@
 #pragma once
 
-#include "primitive.h"
 #include "cudaBRT.h"
 #include "../Mesh.h"
 

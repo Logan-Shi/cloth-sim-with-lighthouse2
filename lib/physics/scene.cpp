@@ -1,4 +1,3 @@
-
 #include "scene.h"
 
 using namespace std;
@@ -34,7 +33,7 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-	delete simulation;
+	//delete simulation;
 }
 
 void Scene::add_cloth(Mesh& object)
@@ -56,14 +55,14 @@ void Scene::init_simulation()
 {
 	if (cloth && body)
 	{
-		simulation = new Simulator(*cloth, *body);
+		//simulation = new Simulator(*cloth, *body);
 	}
 }
 
 void Scene::RenderGPU_CUDA()
 {
-	if (pscene->simulation)
-	{
- 		pscene->simulation->simulate(pscene->cloth);
-	}
+	//if (pscene->simulation)
+	//{
+ //		pscene->simulation->simulate(pscene->cloth);
+	//}
 }
