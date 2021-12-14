@@ -12,7 +12,7 @@ using MortonCode = unsigned int;
 * is created, the original input primitives can be ignored from the scene
 * during point-objects intersection tests as they are contained in the aggregate.
 */
-class BVHAccel{
+class BVHAccel {
 public:
 
 	BVHAccel() { }
@@ -78,7 +78,7 @@ private:
 	BBox* d_bboxes;
 	MortonCode* d_sorted_morton_code;
 
-	vector<glm::vec3> obj_vertices;  
+	vector<glm::vec3> obj_vertices;
 	glm::vec3* d_obj_vertices;
 
 	int numInternalNode;
@@ -92,5 +92,5 @@ private:
 public:
 	// external interface
 	D_BVH* d_bvh;
-	
+
 };

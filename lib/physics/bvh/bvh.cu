@@ -43,10 +43,10 @@ __device__ unsigned int d_morton3D(glm::vec3 p)
 __global__ void get_bb(int num, int m, Primitive* d_primitives, BBox* d_bb)
 {
 	unsigned int index = blockIdx.x * blockDim.x + threadIdx.x;
-	if (index >= num +1)
+	if (index >= num + 1)
 		return;
 	int div = m / num;
-	int res = m%num;
+	int res = m % num;
 	if (index == num + 1)
 	{
 		BBox tem_bbox;
@@ -61,7 +61,7 @@ __global__ void get_bb(int num, int m, Primitive* d_primitives, BBox* d_bb)
 		BBox tem_bbox;
 		for (int i = 0; i < div; i++)  //use shared to replace
 		{
-			tem_bbox.expand(d_primitives[i*num + index].d_get_expand_bbox());
+			tem_bbox.expand(d_primitives[i * num + index].d_get_expand_bbox());
 		}
 		d_bb[index].expand(tem_bbox);
 	}
@@ -122,12 +122,12 @@ BBox BVHAccel::computet_root_bbox(Primitive* d_tem_primitives)
 	const unsigned int num_threads = 128;
 	vector<BBox> c_bb(num_threads + 1);
 	BBox* d_bb;
-	
-	copyFromCPUtoGPU((void**)&d_bb, &c_bb[0], sizeof(BBox)* c_bb.size());
+
+	copyFromCPUtoGPU((void**)&d_bb, &c_bb[0], sizeof(BBox) * c_bb.size());
 	get_bb << <1, c_bb.size() >> > (num_threads, _primitives.size(), d_tem_primitives, d_bb);
 
 	BBox* cc_bb, bb;
-	copyFromGPUtoCPU((void**)&cc_bb, d_bb, sizeof(BBox)*c_bb.size());
+	copyFromGPUtoCPU((void**)&cc_bb, d_bb, sizeof(BBox) * c_bb.size());
 	for (int i = 0; i < c_bb.size(); i++)
 	{
 		bb.expand(cc_bb[i]);
@@ -158,9 +158,9 @@ void BVHAccel::compute_bbox_and_morton()
 	_morton_codes.resize(_primitives.size());
 	_bboxes.resize(_primitives.size());
 
-	copyFromCPUtoGPU((void**)&d_tem_primitives, &_primitives[0], sizeof(Primitive)*_primitives.size());
-	copyFromCPUtoGPU((void**)&d_tem_morton_codes, &_morton_codes[0], sizeof(MortonCode)*_morton_codes.size());
-	copyFromCPUtoGPU((void**)&d_tem_bboxes, &_bboxes[0], sizeof(BBox)*_bboxes.size());
+	copyFromCPUtoGPU((void**)&d_tem_primitives, &_primitives[0], sizeof(Primitive) * _primitives.size());
+	copyFromCPUtoGPU((void**)&d_tem_morton_codes, &_morton_codes[0], sizeof(MortonCode) * _morton_codes.size());
+	copyFromCPUtoGPU((void**)&d_tem_bboxes, &_bboxes[0], sizeof(BBox) * _bboxes.size());
 
 	BBox bb = computet_root_bbox(d_tem_primitives);
 
@@ -172,15 +172,15 @@ void BVHAccel::compute_bbox_and_morton()
 
 	compute_morton_bbox << <numBlocks, numThreads >> > (n, d_tem_primitives, bb, d_tem_morton_codes, d_tem_bboxes);
 
-	cudaMemcpy(&_morton_codes[0], d_tem_morton_codes, sizeof(MortonCode)*_morton_codes.size(), cudaMemcpyDeviceToHost);
-	cudaMemcpy(&_bboxes[0], d_tem_bboxes, sizeof(BBox)*_bboxes.size(), cudaMemcpyDeviceToHost);
+	cudaMemcpy(&_morton_codes[0], d_tem_morton_codes, sizeof(MortonCode) * _morton_codes.size(), cudaMemcpyDeviceToHost);
+	cudaMemcpy(&_bboxes[0], d_tem_bboxes, sizeof(BBox) * _bboxes.size(), cudaMemcpyDeviceToHost);
 
 	cudaFree(d_tem_primitives);
 	cudaFree(d_tem_morton_codes);
 	cudaFree(d_tem_bboxes);
 }
 
-__global__ void init_nodes(BRTreeNode* _nodes,const unsigned int num)
+__global__ void init_nodes(BRTreeNode* _nodes, const unsigned int num)
 {
 	unsigned int index = blockIdx.x * blockDim.x + threadIdx.x;
 	if (index >= num)
@@ -202,9 +202,9 @@ void BVHAccel::init()
 	numLeafNode = size;
 
 	//whether to set h_vertices = NULL before send to gpu?
-	copyFromCPUtoGPU((void**)&d_bvh->d_primitives, &_sorted_primitives[0], sizeof(Primitive)*_sorted_primitives.size());
-	copyFromCPUtoGPU((void**)&d_sorted_morton_code, &_sorted_morton_codes[0], sizeof(MortonCode)*_sorted_morton_codes.size());
-	copyFromCPUtoGPU((void**)&d_bboxes, &_sorted_bboxes[0], sizeof(BBox)*_sorted_bboxes.size());
+	copyFromCPUtoGPU((void**)&d_bvh->d_primitives, &_sorted_primitives[0], sizeof(Primitive) * _sorted_primitives.size());
+	copyFromCPUtoGPU((void**)&d_sorted_morton_code, &_sorted_morton_codes[0], sizeof(MortonCode) * _sorted_morton_codes.size());
+	copyFromCPUtoGPU((void**)&d_bboxes, &_sorted_bboxes[0], sizeof(BBox) * _sorted_bboxes.size());
 
 	//initialize d_leaf_nodes and d_internal_nodes: with a parallel way? ?????
 	cudaMalloc((void**)&d_bvh->d_leaf_nodes, numLeafNode * sizeof(BRTreeNode));
@@ -244,8 +244,8 @@ void BVHAccel::init_primitives(Mesh& body)
 		obj_vertices[i] = glm::vec3(body.vertices[i]);
 	}
 
-	safe_cuda(cudaMalloc((void**)&d_obj_vertices, sizeof(glm::vec3)*obj_vertices.size()));
-	safe_cuda(cudaMemcpy(d_obj_vertices, &obj_vertices[0], sizeof(glm::vec3)*obj_vertices.size(), cudaMemcpyHostToDevice));
+	safe_cuda(cudaMalloc((void**)&d_obj_vertices, sizeof(glm::vec3) * obj_vertices.size()));
+	safe_cuda(cudaMemcpy(d_obj_vertices, &obj_vertices[0], sizeof(glm::vec3) * obj_vertices.size(), cudaMemcpyHostToDevice));
 
 	//create primitives
 	glm::vec3* h_obj_vertices = &obj_vertices[0];
@@ -260,7 +260,7 @@ void BVHAccel::init_primitives(Mesh& body)
 	}
 }
 
-BVHAccel::BVHAccel(Mesh& body, size_t max_leaf_size):
+BVHAccel::BVHAccel(Mesh& body, size_t max_leaf_size) :
 
 	d_bboxes(nullptr),
 #ifdef _DEBUG
@@ -453,8 +453,8 @@ void BVHAccel::access(BRTreeNode* root, vector<BRTreeNode*>& bad_bode)
 }
 void BVHAccel::copy_data_gpu_to_cpu()
 {
-	copyFromGPUtoCPU((void**)&h_internal_nodes, d_bvh->d_internal_nodes, sizeof(BRTreeNode)*numInternalNode);
-	copyFromGPUtoCPU((void**)&h_leaf_nodes, d_bvh->d_leaf_nodes, sizeof(BRTreeNode)*numLeafNode);
+	copyFromGPUtoCPU((void**)&h_internal_nodes, d_bvh->d_internal_nodes, sizeof(BRTreeNode) * numInternalNode);
+	copyFromGPUtoCPU((void**)&h_leaf_nodes, d_bvh->d_leaf_nodes, sizeof(BRTreeNode) * numLeafNode);
 
 }
 
@@ -477,9 +477,9 @@ void BVHAccel::print(BRTreeNode* root, int depth, const int max_depth)
 		is_null = false;
 		cout << " left:" << get_left_child(root)->getIdx() << " " << get_left_child(root)->getParent(is_null);  get_left_child(root)->bbox.print();
 		is_null = false;
-		cout << " right:" << get_right_child(root)->getIdx() << " "<<  get_right_child(root)->getParent(is_null);  get_right_child(root)->bbox.print();
+		cout << " right:" << get_right_child(root)->getIdx() << " " << get_right_child(root)->getParent(is_null);  get_right_child(root)->bbox.print();
 
-		print(get_left_child(root),depth +1, max_depth);
+		print(get_left_child(root), depth + 1, max_depth);
 		print(get_right_child(root), depth + 1, max_depth);
 	}
 }
@@ -526,6 +526,3 @@ void BVHAccel::draw(BRTreeNode* root)
 	}
 }
 #endif
-
-
-

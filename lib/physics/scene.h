@@ -1,6 +1,6 @@
 #pragma once
 
-#include "simulator.h"
+#include "Mesh.h"
 
 // Singleton
 class Scene
@@ -23,7 +23,6 @@ private:
 
 	Mesh* cloth;
 	Mesh* body;
-	Simulator* simulation;
 
 private:
 	static void RenderGPU_CUDA();
