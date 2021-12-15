@@ -14,6 +14,30 @@ Mesh::Mesh(string file_name, cloth_type type):mesh_type(type)
 	unified(Obj);
 }
 
+Mesh::Mesh(Mesh* in)
+{
+	mesh_type = in->mesh_type;
+	vertices = in->vertices;
+	onestep_vertices = in->onestep_vertices;
+	tex.resize(vertices.size());
+	normals.resize(vertices.size());
+	faces = in->faces;
+	vertex_indices.resize(faces.size() * 3);
+
+	vertex_object = in->vertex_object;  //for vertices region division 
+	face_group = in->face_group;
+
+	for (int i = 0; i < faces.size(); i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			tex[faces[i].vertex_index[j]] = in->tex[faces[i].tex_index[j]];
+			normals[faces[i].vertex_index[j]] = in->normals[faces[i].normal_index[j]];
+			vertex_indices[i * 3 + j] = faces[i].vertex_index[j];
+		}
+	}
+}
+
 void Mesh::unified(ObjLoader& Obj)
 {
 	vertices = Obj.vertices;

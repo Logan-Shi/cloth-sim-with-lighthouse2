@@ -9,8 +9,11 @@ class Mesh
 {
 public:
 
-	Mesh(ObjLoader& Obj, cloth_type type = SINGLE_LAYER_BOUNDARY);
-	Mesh(string file_name, cloth_type type = SINGLE_LAYER_BOUNDARY);
+	Mesh(ObjLoader& Obj, cloth_type type = SINGLE_LAYER_NOB);
+	Mesh(string file_name, cloth_type type = SINGLE_LAYER_NOB);
+	Mesh(Mesh* in);
+	Mesh() { mesh_type = SINGLE_LAYER_NOB; };
+	~Mesh() {};
 
 	void scale(float s);
 	void translate(float x_up, float y_up, float z_up);

@@ -3,9 +3,8 @@
 
 using namespace std;
 
-// OPENGL场景的各种参数declaration
 Scene* Scene::pscene = nullptr;
-Simulator* simulation = nullptr;
+static Simulator* simulation = nullptr;
 
 Scene* Scene::getInstance()
 {
@@ -24,14 +23,16 @@ Scene::~Scene()
 	delete simulation;
 }
 
-void Scene::add_cloth(Mesh& object)
+void Scene::add_cloth(Mesh object)
 {
-	cloth = &object;
+	cloth = object;
+	pcloth = &cloth;
 }
 
-void Scene::add_body(Mesh& object)
+void Scene::add_body(Mesh object)
 {
-	body = &object;
+	body = object;
+	pbody = &body;
 }
 
 void Scene::render()
@@ -41,9 +42,9 @@ void Scene::render()
 
 void Scene::init_simulation()
 {
-	if (cloth && body)
+	if (pcloth && pbody)
 	{
-		simulation = new Simulator(*cloth, *body);
+		simulation = new Simulator(*pcloth, *pbody);
 	}
 }
 
@@ -51,6 +52,6 @@ void Scene::RenderGPU_CUDA()
 {
 	if (simulation)
 	{
- 		simulation->simulate(pscene->cloth);
+ 		simulation->simulate(pscene->pcloth);
 	}
 }
