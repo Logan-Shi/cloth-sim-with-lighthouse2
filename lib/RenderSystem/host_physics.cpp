@@ -35,12 +35,12 @@ void HostPhysics::InitPhysics(const HostMesh* cloth, const HostMesh* obs)
 void HostPhysics::UpdatePhysics(const float dt)
 {
 	main_scene->render();
-	vector<glm::vec4> output;
-	output = main_scene->get_vertices();
 	vector<float4> tmp;
-	for (int i = 0; i < output.size(); i++)
+	for (int i = 0; i < main_scene->pcloth->vertex_indices.size(); i++)
 	{
-		float4 vec = make_float4(output[i].x, output[i].y, output[i].z, output[i].w);
+		int index = main_scene->pcloth->vertex_indices[i];
+		glm::vec4 veci = glm::vec4(main_scene->pcloth->onestep_vertices[index],1.0);
+		float4 vec = make_float4(veci.x, veci.y, veci.z, veci.w);
 		tmp.push_back(vec);
 	}
 	vertices = tmp;

@@ -12,19 +12,16 @@ public:
 	void add_body(Mesh object);    // mesh(body) to be collided
 	void init_simulation();               // construct simualtion
 	void render();
-	vector<glm::vec4> get_vertices() { return output_vertices; };
-
-private:
-	Scene();  //initial
-
-private:
-	static Scene* pscene;       //pscene points to the Scene(singleton)
-	enum attributes { position, texture, normal };
-
-	Mesh cloth;
-	Mesh body;
 	Mesh* pcloth;
 	Mesh* pbody;
+
+private:
+	Scene();  //initia
+	Mesh cloth;
+	Mesh body;
+
+	static Scene* pscene;       //pscene points to the Scene(singleton)
+	enum attributes { position, texture, normal };
 
 private:
 	static void RenderGPU_CUDA();
