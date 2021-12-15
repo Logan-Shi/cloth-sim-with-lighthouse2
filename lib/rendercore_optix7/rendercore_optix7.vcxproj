@@ -62,6 +62,7 @@
       <PrecompiledHeaderFile>core_settings.h</PrecompiledHeaderFile>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -73,6 +74,7 @@
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
       <FastMath>true</FastMath>
+      <Runtime>MTd</Runtime>
     </CudaCompile>
     <Lib>
       <AdditionalDependencies>cudart_static.lib;nvrtc.lib</AdditionalDependencies>

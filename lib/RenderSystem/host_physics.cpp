@@ -1,6 +1,5 @@
 #include "rendersystem.h"
-#include "host_physics.h"
-#include "../physics/scene.h"
+#include "scene.h"
 
 Scene* main_scene = nullptr;
 

@@ -41,3 +41,6 @@
 /lib/RenderCore_SoftRasterizer/x64
 /lib/rendercore_vulkan_rt/x64
 /lib/RenderSystem
+/lib/physicssystem/lib/Debug
+/lib/physicssystem/x64/Debug
+/x64/Debug/physicssystem.idb
