@@ -23,9 +23,9 @@ void HostPhysics::InitPhysics(const HostMesh* cloth, const HostMesh* obs)
 	main_scene = Scene::getInstance(); //initialize opengl 
 
 	Mesh cloth_("../_shareddata/Cloth/dress-victor.obj", SINGLE_LAYER_NOB);
-	
-	Mesh body_("../_shareddata/male.obj");
-	
+	cloth_.translate(0, 2.1, 0);
+	Mesh body_("../_shareddata/Cloth/table.obj");
+	//body_.scale(50);
 	main_scene->add_cloth(cloth_);
 	main_scene->add_body(body_);
 

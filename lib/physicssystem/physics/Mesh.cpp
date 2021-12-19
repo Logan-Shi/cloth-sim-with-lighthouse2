@@ -31,7 +31,6 @@ Mesh::Mesh(Mesh* in)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			tex[faces[i].vertex_index[j]] = in->tex[faces[i].tex_index[j]];
 			normals[faces[i].vertex_index[j]] = in->normals[faces[i].normal_index[j]];
 			vertex_indices[i * 3 + j] = faces[i].vertex_index[j];
 		}
@@ -42,7 +41,6 @@ void Mesh::unified(ObjLoader& Obj)
 {
 	vertices = Obj.vertices;
 	onestep_vertices = Obj.onestep_vertices;
-	tex.resize(vertices.size());
 	normals.resize(vertices.size());
 	faces = Obj.faces;
 	vertex_indices.resize(faces.size() * 3);
@@ -54,7 +52,6 @@ void Mesh::unified(ObjLoader& Obj)
 	{
 		for (int j = 0; j < 3; j++)
 		{
-			tex[faces[i].vertex_index[j]] = Obj.tex[faces[i].tex_index[j]];
 			normals[faces[i].vertex_index[j]] = Obj.normals[faces[i].normal_index[j]];
 			vertex_indices[i * 3 + j] = faces[i].vertex_index[j];
 		}
