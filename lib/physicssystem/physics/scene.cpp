@@ -4,7 +4,7 @@
 using namespace std;
 
 Scene* Scene::pscene = nullptr;
-static Simulator* simulation = nullptr;
+static vector<Simulator*> simulation;
 
 Scene* Scene::getInstance()
 {
@@ -20,19 +20,20 @@ Scene::Scene()
 
 Scene::~Scene()
 {
-	delete simulation;
+	for each (auto var in simulation)
+	{
+		delete var;
+	}
 }
 
 void Scene::add_cloth(Mesh object)
 {
-	cloth = object;
-	pcloth = &cloth;
+	cloth.push_back(object);
 }
 
 void Scene::add_body(Mesh object)
 {
-	body = object;
-	pbody = &body;
+	body.push_back(object);
 }
 
 void Scene::render()
@@ -42,16 +43,25 @@ void Scene::render()
 
 void Scene::init_simulation()
 {
-	if (pcloth && pbody)
+	pcloth.resize(cloth.size());
+	pbody.resize(cloth.size());
+	simulation.resize(cloth.size());
+	for (int i = 0; i < cloth.size(); i++)
 	{
-		simulation = new Simulator(*pcloth, *pbody);
+		pcloth[i] = &cloth[i];
+		pbody[i] = &body[i];
+		if (pcloth[i] && pbody[i])
+		{
+			Simulator* lsimulation = new Simulator(*pcloth[i], *pbody[i]);
+			simulation[i] = lsimulation;
+		}
 	}
 }
 
 void Scene::RenderGPU_CUDA()
 {
-	if (simulation)
+	for (int i = 0; i < simulation.size(); i++)
 	{
- 		simulation->simulate(pscene->pcloth);
+		simulation[i]->simulate(pscene->pcloth[i]);
 	}
 }

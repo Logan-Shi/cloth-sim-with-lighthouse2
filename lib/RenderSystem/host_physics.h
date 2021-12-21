@@ -28,11 +28,11 @@ namespace lighthouse2
 		HostPhysics();
 		~HostPhysics();
 		// methods
-		void InitPhysics(const HostMesh* cloth_vertices, const HostMesh* obs_vertices);
+		void InitPhysics();
 		void UpdatePhysics(const float dt);
-		vector<float4> GetVertices() { return vertices; };
+		vector<float4> GetVertices(int i) { return vertices[i]; };
 	private:
-		vector<float4> vertices;
+		vector<vector<float4>> vertices;
 	};
 } //namespace lighthouse2
 

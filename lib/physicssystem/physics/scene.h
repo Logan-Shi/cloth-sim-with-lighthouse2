@@ -12,13 +12,13 @@ public:
 	void add_body(Mesh object);    // mesh(body) to be collided
 	void init_simulation();               // construct simualtion
 	void render();
-	Mesh* pcloth;
-	Mesh* pbody;
+	vector<Mesh*> pcloth;
+	vector<Mesh*> pbody;
 
 private:
 	Scene();  //initia
-	Mesh cloth;
-	Mesh body;
+	vector<Mesh> cloth;
+	vector<Mesh> body;
 
 	static Scene* pscene;       //pscene points to the Scene(singleton)
 	enum attributes { position, texture, normal };

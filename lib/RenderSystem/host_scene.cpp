@@ -203,10 +203,6 @@ int HostScene::AddMesh( const char* objFile, const float scale, const bool flatS
 
 int HostScene::AddMesh(const char* objFile, const char* dir, const float scale, const bool flatShaded, const bool animated)
 {
-	if (animated)
-	{
-		physicsCount++;
-	}
 	HostMesh* newMesh = new HostMesh(objFile, dir, scale, flatShaded, animated);
 	return AddMesh(newMesh);
 }

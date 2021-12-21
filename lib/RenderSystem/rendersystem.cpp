@@ -129,12 +129,15 @@ void RenderSystem::SynchronizeMeshes()
 //  +-----------------------------------------------------------------------------+
 void RenderSystem::UpdatePhysics(const float dt)
 {
+	physics->UpdatePhysics(dt);
+	int animate_counter = 0;
 	for (int s = (int)scene->meshPool.size(), modelIdx = 0; modelIdx < s; modelIdx++)
 	{
 		HostMesh* mesh = scene->meshPool[modelIdx];// set modelIdx
 		if (mesh->isAnimated)
 		{
-			ClothPhysics(mesh,dt);
+			UpdateClothVertices(mesh,animate_counter,dt);
+			animate_counter++;
 			core->SetGeometry(modelIdx, mesh->vertices.data(), (int)mesh->vertices.size(), (int)mesh->triangles.size(), (CoreTri*)mesh->triangles.data());
 		}
 	}
@@ -144,10 +147,9 @@ void RenderSystem::UpdatePhysics(const float dt)
 //  |  RenderSystem::MeshPhysics                                                  |
 //  |  update cloth vertex position with spring model                             |
 //  +-----------------------------------------------------------------------------+
-void RenderSystem::ClothPhysics(HostMesh* mesh, const float dt)
+void RenderSystem::UpdateClothVertices(HostMesh* mesh, int ID, const float dt)
 {
-	physics->UpdatePhysics(dt);
-	mesh->vertices = physics->GetVertices();
+	mesh->vertices = physics->GetVertices(ID);
 }
 
 

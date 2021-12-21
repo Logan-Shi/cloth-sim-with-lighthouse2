@@ -80,6 +80,7 @@ public:
 	static void UpdateAnimation( const int animId, const float dt );
 	static int AnimationCount() { return (int)animations.size(); }
 	static int PhysicsCount() { return physicsCount; };
+	static void AddPhysics() { physicsCount++; };
 	// scene construction / maintenance
 	static int AddMesh( HostMesh* mesh );
 	static int AddMesh(const char* objFile, const char* dir, const float scale = 1.0f, const bool flatShaded = false, const bool animated = false);

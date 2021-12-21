@@ -34,7 +34,7 @@ static float3 arcStart;
 static int2 arcPivot;
 static mat4 matStart;
 static int arcInst = 0;
-static int plane, cloth, obs = 0;
+static int plane, cloth, obs,kitchen,curtain = 0;
 
 #include "main_tools.h"
 #include "main_ui.h"
@@ -137,29 +137,46 @@ void Initialize()
 	InitGLFW();
 	InitImGui();
 
-	// initialize renderer: pick one
-	// renderer = RenderAPI::CreateRenderAPI( "RenderCore_Optix7filter" );		// OPTIX7 core, with filtering (static scenes only for now)
-	renderer = RenderAPI::CreateRenderAPI( "RenderCore_Optix7" );				// OPTIX7 core, best for RTX devices
-	// renderer = RenderAPI::CreateRenderAPI( "RenderCore_OptixPrime_B" );		// OPTIX PRIME, best for pre-RTX CUDA devices
 
-	renderer->DeserializeCamera( "camera.xml" );
+
+	// initialize renderer: pick one
+	// renderer = RenderAPI::CreateRenderAPI( "RenderCore_Optix7filter" );        // OPTIX7 core, with filtering (static scenes only for now)
+	renderer = RenderAPI::CreateRenderAPI( "RenderCore_Optix7" );                // OPTIX7 core, best for RTX devices
+	// renderer = RenderAPI::CreateRenderAPI("RenderCore_OptixPrime_B");        // OPTIX PRIME, best for pre-RTX CUDA devices
+
+	renderer->DeserializeCamera("camera.xml");
 	// set initial window size
-	ReshapeWindowCallback( 0, SCRWIDTH, SCRHEIGHT );
+	ReshapeWindowCallback(0, SCRWIDTH, SCRHEIGHT);
 	// initialize scene
 	auto sky = new HostSkyDome();
-	sky->Load( "../_shareddata/sky_15.hdr" );
-	sky->worldToLight = mat4::RotateX( -PI / 2 ); // compensate for different evaluation in PBRT
-	renderer->GetScene()->SetSkyDome( sky );
-	int floorMat = renderer->AddMaterial( make_float3( 1 ), "floormaterial" );
-	HostMaterial* m = renderer->GetMaterial( floorMat );
-	plane = renderer->AddQuad( make_float3( 0, 1, 0 ), make_float3( 0, -2, 0 ), 100, 100, floorMat );
-	renderer->AddInstance( plane );
-	renderer->DeserializeMaterials( "materials.xml" );
-	cloth = renderer->AddInstance(renderer->AddMesh("dress-victor.obj", "../_shareddata/Cloth/", 10.0f, false, true));
+	sky->Load("../_shareddata/sky_15.hdr");
+	sky->worldToLight = mat4::RotateX(-PI / 2); // compensate for different evaluation in PBRT
+	renderer->GetScene()->SetSkyDome(sky);
+	//Lightsource 1
+	int whiteMat = renderer->AddMaterial(make_float3(20));
+	int lightQuad = renderer->AddQuad(make_float3(0, -1, 0), make_float3(40, 40, 15), 10.9f, 10.9f, whiteMat);
+	renderer->AddInstance(lightQuad);
+	int whiteMat2 = renderer->AddMaterial(make_float3(20));
+	int lightQuad2 = renderer->AddQuad(make_float3(0, -1, 0), make_float3(10, 40, 15), 10.9f, 10.9f, whiteMat2);
+	renderer->AddInstance(lightQuad2);
+	// Lightsource 2
+	int OrangeMat = renderer->AddMaterial(make_float3(245, 197, 193));
+	int lightQuad3 = renderer->AddQuad(make_float3(0, -1, 1), make_float3(40, 40, -30), 10.9f, 10.9f, OrangeMat);
+	renderer->AddInstance(lightQuad3);
+	//kitchen = renderer->AddScene( "../_shareddata/knight/scene.gltf");
+	kitchen = renderer->AddScene("../_shareddata/CG/Main.gltf", mat4::Translate(2, 0, -1) * mat4::RotateY(-PI / 2) * mat4::Scale(0.0229));
+	int floorMat = renderer->AddMaterial(make_float3(1), "floormaterial");
+	HostMaterial* m = renderer->GetMaterial(floorMat);
+	plane = renderer->AddQuad(make_float3(0, 1, 0), make_float3(0, -2, 0), 100, 100, floorMat);
+	renderer->AddInstance(plane);
+	renderer->DeserializeMaterials("materials.xml");
 
+	cloth = renderer->AddInstance(renderer->AddMesh("robe.obj", "../_shareddata/Cloth/", 10.0f, false, true));
+	curtain = renderer->AddInstance(renderer->AddMesh("dress-victor.obj", "../_shareddata/Cloth/", 1.0f, false, true));
 	obs = renderer->AddInstance(renderer->AddMesh("table_full.obj", "../_shareddata/Cloth/", 0.02f, false, false));
+	
 	renderer->SynchronizeSceneData();
-	renderer->InitPhysics(cloth, obs);
+	renderer->InitPhysics();
 
 	printf("loaded %d animations\n", renderer->AnimationCount());
 	printf("loaded %d physics\n", renderer->PhysicsCount());
@@ -193,7 +210,7 @@ void main()
 		// update animations
 		if (!animPaused) for (int i = 0; i < renderer->AnimationCount()+ renderer->PhysicsCount(); i++)
 		{
-			renderer->UpdateAnimation( i, frameTime );
+			//renderer->UpdateAnimation( i, frameTime );
 			renderer->UpdatePhysics(frameTime);
 			camMoved = true; // will remain false if scene has no animations
 		}

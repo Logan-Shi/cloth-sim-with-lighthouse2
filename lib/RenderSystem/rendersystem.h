@@ -100,7 +100,7 @@ private:
 	void SynchronizeTextures();
 	void SynchronizeMaterials();
 	void SynchronizeMeshes();
-	void ClothPhysics(HostMesh* mesh, const float dt);
+	void UpdateClothVertices(HostMesh* mesh, int ID, const float dt);
 	void SynchronizeLights();
 	void UpdateSceneGraph();
 private:
