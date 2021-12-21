@@ -41,9 +41,9 @@ void HostPhysics::InitPhysics()
 void HostPhysics::UpdatePhysics(const float dt)
 {
 	main_scene->render();
-	vector<float4> tmp;
 	for (int j = 0; j < main_scene->pcloth.size(); j++)
 	{
+		vector<float4> tmp;
 		for (int i = 0; i < main_scene->pcloth[j]->vertex_indices.size(); i++)
 		{
 			int index = main_scene->pcloth[j]->vertex_indices[i];

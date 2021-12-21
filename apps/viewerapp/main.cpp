@@ -137,8 +137,6 @@ void Initialize()
 	InitGLFW();
 	InitImGui();
 
-
-
 	// initialize renderer: pick one
 	// renderer = RenderAPI::CreateRenderAPI( "RenderCore_Optix7filter" );        // OPTIX7 core, with filtering (static scenes only for now)
 	renderer = RenderAPI::CreateRenderAPI( "RenderCore_Optix7" );                // OPTIX7 core, best for RTX devices
@@ -171,7 +169,7 @@ void Initialize()
 	renderer->AddInstance(plane);
 	renderer->DeserializeMaterials("materials.xml");
 
-	cloth = renderer->AddInstance(renderer->AddMesh("robe.obj", "../_shareddata/Cloth/", 10.0f, false, true));
+	cloth = renderer->AddInstance(renderer->AddMesh("robe.obj", "../_shareddata/Cloth/", 1.0f, false, true));
 	curtain = renderer->AddInstance(renderer->AddMesh("dress-victor.obj", "../_shareddata/Cloth/", 1.0f, false, true));
 	obs = renderer->AddInstance(renderer->AddMesh("table_full.obj", "../_shareddata/Cloth/", 0.02f, false, false));
 	
