@@ -22,7 +22,7 @@
 
 // core-specific settings
 #define CLAMPFIREFLIES		// suppress fireflies by clamping
-#define MAXPATHLENGTH		3
+#define MAXPATHLENGTH		16
 // #define CONSISTENTNORMALS	// consistent normal interpolation
 
 // low-level settings

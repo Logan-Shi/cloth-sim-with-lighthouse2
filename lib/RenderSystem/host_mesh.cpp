@@ -924,9 +924,23 @@ void HostMesh::UpdateTriangles()
 		const float3 e1 = tri.vertex1 - tri.vertex0;
 		const float3 e2 = tri.vertex2 - tri.vertex0;
 		float3 N = normalize(cross(e1, e2));
-		tri.vN0 = (dot(tri.vN0, N) < 0) ?-N:N;
-		tri.vN1 = (dot(tri.vN1, N) < 0) ?-N:N;
-		tri.vN2 = (dot(tri.vN2, N) < 0) ?-N:N;
+		tri.vN0 = (dot(tri.vN0,N)<0)?-N:N;
+		tri.vN1 = (dot(tri.vN1,N)<0)?-N:N;
+		tri.vN2 = (dot(tri.vN2,N)<0)?-N:N;
+
+		float2 uv01 = make_float2( tri.u1 - tri.u0, tri.v1 - tri.v0 );
+		float2 uv02 = make_float2( tri.u2 - tri.u0, tri.v2 - tri.v0 );
+		if (dot( uv01, uv01 ) == 0 || dot( uv02, uv02 ) == 0)
+		{
+			tri.T = normalize( tri.vertex1 - tri.vertex0 );
+			tri.B = normalize( cross( N, tri.T ) );
+		}
+		else
+		{
+			tri.T = normalize( e1 * uv02.y - e2 * uv01.y );
+			tri.B = normalize( e2 * uv01.x - e1 * uv02.x );
+		}
+		tri.Nx = N.x, tri.Ny = N.y, tri.Nz = N.z;
 	}
 }
 
