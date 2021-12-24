@@ -101,6 +101,7 @@ private:
 	void SynchronizeMaterials();
 	void SynchronizeMeshes();
 	void UpdateClothVertices(HostMesh* mesh, int ID, const float dt);
+	void UpdateClothTriangles(HostMesh* mesh);
 	void SynchronizeLights();
 	void UpdateSceneGraph();
 private:

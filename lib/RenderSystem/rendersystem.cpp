@@ -137,6 +137,7 @@ void RenderSystem::UpdatePhysics(const float dt)
 		if (mesh->isAnimated)
 		{
 			UpdateClothVertices(mesh,animate_counter,dt);
+			UpdateClothTriangles(mesh);
 			animate_counter++;
 			core->SetGeometry(modelIdx, mesh->vertices.data(), (int)mesh->vertices.size(), (int)mesh->triangles.size(), (CoreTri*)mesh->triangles.data());
 		}
@@ -150,6 +151,11 @@ void RenderSystem::UpdatePhysics(const float dt)
 void RenderSystem::UpdateClothVertices(HostMesh* mesh, int ID, const float dt)
 {
 	mesh->vertices = physics->GetVertices(ID);
+}
+
+void RenderSystem::UpdateClothTriangles(HostMesh* mesh)
+{
+	mesh->UpdateTriangles();
 }
 
 

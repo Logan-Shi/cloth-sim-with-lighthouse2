@@ -138,6 +138,7 @@ void HostMesh::LoadGeometryFromOBJ( const string& fileName, const char* director
 	string err, warn;
 	Timer timer;
 	timer.reset();
+	name = fileName;
 	tinyobj::LoadObj( &attrib, &shapes, &materials, &err, &warn, fileName.c_str(), directory );
 	FATALERROR_IF( err.size() > 0 || shapes.size() == 0, "tinyobj failed to load %s: %s", fileName.c_str(), err.c_str() );
 	printf( "loaded mesh in %5.3fs\n", timer.elapsed() );
@@ -910,6 +911,23 @@ void HostMesh::SetPose( const HostSkin* skin )
 #endif
 	// mark as dirty; changing vector contents doesn't trigger this
 	MarkAsDirty();
+}
+
+void HostMesh::UpdateTriangles()
+{
+	for (int s = (int)triangles.size(), face = 0, i = 0; i < s; i++)
+	{
+		HostTri& tri = triangles[face];
+		tri.vertex0 = make_float3(vertices[face * 3 + 0]);
+		tri.vertex1 = make_float3(vertices[face * 3 + 1]);
+		tri.vertex2 = make_float3(vertices[face * 3 + 2]);
+		const float3 e1 = tri.vertex1 - tri.vertex0;
+		const float3 e2 = tri.vertex2 - tri.vertex0;
+		float3 N = normalize(cross(e1, e2));
+		tri.vN0 = (dot(tri.vN0, N) < 0) ?-N:N;
+		tri.vN1 = (dot(tri.vN1, N) < 0) ?-N:N;
+		tri.vN2 = (dot(tri.vN2, N) < 0) ?-N:N;
+	}
 }
 
 // EOF

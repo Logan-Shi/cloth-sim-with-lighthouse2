@@ -64,6 +64,7 @@ public:
 	void BuildMaterialList();
 	void SetPose( const vector<float>& weights );
 	void SetPose( const HostSkin* skin );
+	void UpdateTriangles();
 	// data members
 	string name = "unnamed";					// name for the mesh						
 	int ID = -1;								// unique ID for the mesh: position in mesh array
