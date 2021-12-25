@@ -284,7 +284,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>RENDERSYSTEMBUILD;PBRT_IS_WINDOWS;WIN32;WIN64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);.;../freeimage/inc;../zlib;../glfw/include;../glad/include;../half2.2.0;../tinyobjloader;../RenderCore_Prime;../tinyxml2;../platform;../tinygltf/rapidjson;../tinygltf;../taskflow</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);.;../freeimage/inc;../zlib;../glfw/include;../glad/include;../half2.2.0;../tinyobjloader;../RenderCore_Prime;../tinyxml2;../platform;../tinygltf/rapidjson;../tinygltf;../taskflow;../physicssystem/physics/glm;../physicssystem/physics;../physicssystem/physics/bvh</AdditionalIncludeDirectories>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <DebugInformationFormat>None</DebugInformationFormat>
@@ -307,6 +307,10 @@
       </AdditionalLibraryDirectories>
       <OutputFile>lib\$(Configuration)\$(TargetName)$(TargetExt)</OutputFile>
     </Lib>
+    <CudaCompile>
+      <Include>.;../freeimage/inc;../zlib;../glfw/include;../glad/include;../half2.2.0;../tinyobjloader;../RenderCore_Prime;../tinyxml2;../platform;../tinygltf/rapidjson;../tinygltf;../taskflow;../physicssystem/physics;../physicssystem/physics/glm;../physicssystem/physics/bvh;../glew-cmake/include;../freeglut/include;%(Include)</Include>
+      <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
+    </CudaCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

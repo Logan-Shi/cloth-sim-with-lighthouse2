@@ -35,7 +35,6 @@ static int2 arcPivot;
 static mat4 matStart;
 static int arcInst = 0;
 static int plane, cloth, obs, kitchen = 0;
-static int holder_1, holder_2 = 0;
 static int curtain_1, curtain_2, curtain_3, curtain_4 = 0;
 static int chair = 0;
 
@@ -154,19 +153,27 @@ void Initialize()
 	sky->worldToLight = mat4::RotateX(-PI / 2); // compensate for different evaluation in PBRT
 	renderer->GetScene()->SetSkyDome(sky);
 	//Lightsource 1
-	int whiteMat = renderer->AddMaterial(make_float3(5));
-	int lightQuad = renderer->AddQuad(make_float3(0, -1, 0), make_float3(0, 6, 4), 4.0f, 4.0f, whiteMat);
-	renderer->AddInstance(lightQuad);
-	int whiteMat2 = renderer->AddMaterial(make_float3(5));
-	int lightQuad2 = renderer->AddQuad(make_float3(0, -1, 0), make_float3(0, 6, 0), 4.0f, 4.0f, whiteMat2);
-	renderer->AddInstance(lightQuad2);
+	//int whiteMat = renderer->AddMaterial(make_float3(2));
+	//int lightQuad = renderer->AddQuad(make_float3(0, -1, 0), make_float3(0, 6, 4), 4.0f, 4.0f, whiteMat);
+	//renderer->AddInstance(lightQuad);
+	//int whiteMat2 = renderer->AddMaterial(make_float3(2));
+	//int lightQuad2 = renderer->AddQuad(make_float3(0, -1, 0), make_float3(0, 6, 0), 4.0f, 4.0f, whiteMat2);
+	//renderer->AddInstance(lightQuad2);
 	// Lightsource 2
-	int OrangeMat = renderer->AddMaterial(make_float3(2.45 * 5, 1.97 * 5, 1.93 * 5));
-	int lightQuad3 = renderer->AddQuad(make_float3(-1, -1, 0), make_float3(4, 4, 4), 4.0f, 2.0f, OrangeMat);
+	int OrangeMat = renderer->AddMaterial(make_float3(245,197,183));
+	int lightQuad3 = renderer->AddQuad(make_float3(-1, -1, 0), make_float3(4, 3.5, 4), 4.0f, 2.0f, OrangeMat);
 	renderer->AddInstance(lightQuad3);
-	int OrangeMat2 = renderer->AddMaterial(make_float3(2.45 * 5, 1.97 * 5, 1.93 * 5));
-	int lightQuad4 = renderer->AddQuad(make_float3(-1, -1, 0), make_float3(4, 4, 0), 4.0f, 2.0f, OrangeMat2);
+	int OrangeMat2 = renderer->AddMaterial(make_float3(245, 197, 183));
+	int lightQuad4 = renderer->AddQuad(make_float3(-1, -1, 0), make_float3(4, 3.5, 0), 4.0f, 2.0f, OrangeMat2);
 	renderer->AddInstance(lightQuad4);
+	// Lightsource 3
+	//int Floorlight = renderer->AddMaterial(make_float3(2));
+	//int lightQuad5 = renderer->AddQuad(make_float3(0, 1, 2), make_float3(0, -0.5, -3), 0.5f, 4.0f, Floorlight);
+	//renderer->AddInstance(lightQuad5);
+	//int Floorlight2 = renderer->AddMaterial(make_float3(2));
+	//int lightQuad6 = renderer->AddQuad(make_float3(2, 1, 0), make_float3(-3, -0.5, 0), 4.0f, 0.5f, Floorlight2);
+	//renderer->AddInstance(lightQuad6);
+
 	kitchen = renderer->AddScene("../_shareddata/CG/Main.gltf");
 	int floorMat = renderer->AddMaterial(make_float3(1), "floormaterial");
 	HostMaterial* m = renderer->GetMaterial(floorMat);
@@ -175,14 +182,12 @@ void Initialize()
 	renderer->DeserializeMaterials("materials.xml");
 
 	cloth = renderer->AddInstance(renderer->AddMesh("table_cloth.obj", "../_shareddata/Cloth/", 1.0f, false, true));
-	bool is_curtain = false;
+	bool is_curtain = true;
 	curtain_1 = renderer->AddInstance(renderer->AddMesh("curtain.obj", "../_shareddata/Cloth/", 1.0f, false, is_curtain));
 	curtain_2 = renderer->AddInstance(renderer->AddMesh("curtain2.obj", "../_shareddata/Cloth/", 1.0f, false, is_curtain));
-	curtain_3 = renderer->AddInstance(renderer->AddMesh("curtain3.obj", "../_shareddata/Cloth/", 1.0f, false, is_curtain));
-	curtain_4 = renderer->AddInstance(renderer->AddMesh("curtain4.obj", "../_shareddata/Cloth/", 1.0f, false, is_curtain));
+	//curtain_3 = renderer->AddInstance(renderer->AddMesh("curtain3.obj", "../_shareddata/Cloth/", 1.0f, false, is_curtain));
+	//curtain_4 = renderer->AddInstance(renderer->AddMesh("curtain4.obj", "../_shareddata/Cloth/", 1.0f, false, is_curtain));
 	obs = renderer->AddInstance(renderer->AddMesh("table_full.obj", "../_shareddata/Cloth/", 0.02f, false, false));
-	holder_1 = renderer->AddInstance(renderer->AddMesh("curtain_holder.obj", "../_shareddata/Cloth/", 1.0f, false, false));
-	holder_2 = renderer->AddInstance(renderer->AddMesh("curtain_holder2.obj", "../_shareddata/Cloth/", 1.0f, false, false)); 
 	chair = renderer->AddInstance(renderer->AddMesh("chairs.obj", "../_shareddata/Cloth/", 1.0f, false, false)); 
 
 	renderer->SynchronizeSceneData();
@@ -218,7 +223,7 @@ void main()
 		if (HandleMaterialChange()) camMoved = true;
 		renderer->SynchronizeSceneData();
 		// update animations
-		if (!animPaused) for (int i = 0; i < renderer->AnimationCount()+ renderer->PhysicsCount(); i++)
+		if (!animPaused) for (int i = 0; i < renderer->PhysicsCount(); i++)
 		{
 			//renderer->UpdateAnimation( i, frameTime );
 			renderer->UpdatePhysics(frameTime);

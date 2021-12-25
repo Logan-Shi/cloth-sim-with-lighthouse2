@@ -2,6 +2,8 @@
 #include <cuda.h>
 #include <device_functions.h>
 #include <device_launch_parameters.h>
+#include <thrust/host_vector.h>
+#include <thrust/device_vector.h>
 
 //physics parameter
 __constant__ double spring_structure = 1000.0;
@@ -33,16 +35,20 @@ __constant__ float beta_wind = 0.5;
 __constant__ float lambda_wind = 0;
 __constant__ float split_time_wind = 300000.0;
 // direction parameters
-__constant__ float thetav_wind = 45.0;
-__constant__ float thetal_wind = 45.0;
+__constant__ float thetav_wind = 90.0;
+__constant__ float thetal_wind = 90.0;
 __constant__ float degree_to_rad = 3.1415926 / 180.0;
 // air parameters
 __constant__ float C_lift = 5;
 __constant__ float C_drag = 5;
 __constant__ float strong_wind = 0.1;
 
-__constant__ float critical_length = 0.01;
+__constant__ float critical_length = 0.03;
 __constant__ float repul_stiffness = 200;
+
+__constant__ float slope_index = 1000;
+__constant__ float reflect_index = 0.1;
+__constant__ float cut_time = 0;
 
 
 __device__ float perlin(float x) {
@@ -72,9 +78,9 @@ __device__ glm::vec3 perlin_noise(glm::vec3 point)
 	glm::vec3 output_noise;
 	float x, y, z;
 	float noise_length;
-	x = perlin(abs(point.x) * 10000);
-	y = perlin(abs(point.y) * 10000);
-	z = perlin(abs(point.z) * 10000);
+	x = perlin(abs(point.x) * 10000 + 0.1);
+	y = perlin(abs(point.y) * 10000 + 0.1);
+	z = perlin(abs(point.z) * 10000 + 0.1);
 	noise_length = sqrt(pow(x, 2) + pow(y, 2) + pow(z, 2)) + 0.1;
 	x = x / noise_length;
 	y = y / noise_length;
@@ -93,6 +99,7 @@ __device__ glm::vec3 compute_wind_force_lift(unsigned int idx, glm::vec3* g_pos_
 	glm::vec3 F_lift = glm::vec3(0.0);
 	glm::vec3 F_drag = glm::vec3(0.0);
 	float final_S = 0;
+	float gap = 0.0001;
 	for (int k = first_neigh; k < CSR_R[idx + 1]; k++)
 	{
 		if (k <= CSR_R[idx + 1] - 2)
@@ -122,9 +129,8 @@ __device__ glm::vec3 compute_wind_force_lift(unsigned int idx, glm::vec3* g_pos_
 			final_S += temp_S;
 		}
 	}
-	final_normal = glm::normalize(final_normal + glm::vec3(0.001));
-	relative_wind = glm::normalize(relative_wind);
-	float costheta = (glm::dot(final_normal, relative_wind)>0.9)?0.9: glm::dot(final_normal, relative_wind);
+	final_normal = final_normal / (glm::length(final_normal) + gap);
+	float costheta = glm::dot(final_normal, glm::normalize(relative_wind));
 	F_drag = -C_drag * final_S * sqrt(1 - costheta * costheta) * relative_wind;
 	F_lift = C_lift * final_S * costheta * glm::cross(glm::cross(final_normal, relative_wind), relative_wind);
 
@@ -140,6 +146,7 @@ __device__ glm::vec3 compute_wind_force_drag(unsigned int idx, glm::vec3* g_pos_
 	glm::vec3 F_lift = glm::vec3(0.0);
 	glm::vec3 F_drag = glm::vec3(0.0);
 	float final_S = 0;
+	float gap = 0.0001;
 	for (int k = first_neigh; k < CSR_R[idx + 1]; k++)
 	{
 		if (k <= CSR_R[idx + 1] - 2)
@@ -169,9 +176,8 @@ __device__ glm::vec3 compute_wind_force_drag(unsigned int idx, glm::vec3* g_pos_
 			final_S += temp_S;
 		}
 	}
-	final_normal = glm::normalize(final_normal+glm::vec3(0.001));
-	relative_wind = glm::normalize(relative_wind);
-	float costheta = (glm::dot(final_normal, relative_wind) > 0.9) ? 0.9 : glm::dot(final_normal, relative_wind);
+	final_normal = final_normal / (glm::length(final_normal) + gap);
+	float costheta = glm::dot(final_normal, glm::normalize(relative_wind));
 	F_drag = -C_drag * final_S * sqrt(1 - costheta * costheta) * relative_wind;
 	F_lift = C_lift * final_S * costheta * glm::cross(glm::cross(final_normal, relative_wind), relative_wind);
 
@@ -185,6 +191,7 @@ __device__ glm::vec3 compute_wind_force2_lift(unsigned int idx, glm::vec3* g_pos
 	glm::vec3 F_lift = glm::vec3(0.0);
 	glm::vec3 F_drag = glm::vec3(0.0);
 	float final_S = 0;
+	float gap = 0.0001;
 	for (int k = first_neigh; k < CSR_R[idx + 1]; k++)
 	{
 		if (k <= CSR_R[idx + 1] - 2)
@@ -214,9 +221,8 @@ __device__ glm::vec3 compute_wind_force2_lift(unsigned int idx, glm::vec3* g_pos
 			final_S += temp_S;
 		}
 	}
-	final_normal = glm::normalize(final_normal + glm::vec3(0.001));
-	relative_wind = glm::normalize(relative_wind);
-	float costheta = (glm::dot(final_normal, relative_wind) > 0.9) ? 0.9 : glm::dot(final_normal, relative_wind);
+	final_normal = final_normal / (glm::length(final_normal) + gap);
+	float costheta = glm::dot(final_normal, glm::normalize(relative_wind));
 	F_drag = -C_drag * final_S * sqrt(1 - costheta * costheta) * relative_wind;
 	F_lift = C_lift * final_S * costheta * glm::cross(glm::cross(final_normal, relative_wind), relative_wind);
 
@@ -230,6 +236,7 @@ __device__ glm::vec3 compute_wind_force2_drag(unsigned int idx, glm::vec3* g_pos
 	glm::vec3 F_lift = glm::vec3(0.0);
 	glm::vec3 F_drag = glm::vec3(0.0);
 	float final_S = 0;
+	float gap = 0.0001;
 	for (int k = first_neigh; k < CSR_R[idx + 1]; k++)
 	{
 		if (k <= CSR_R[idx + 1] - 2)
@@ -259,9 +266,8 @@ __device__ glm::vec3 compute_wind_force2_drag(unsigned int idx, glm::vec3* g_pos
 			final_S += temp_S;
 		}
 	}
-	final_normal = glm::normalize(final_normal + glm::vec3(0.001));
-	relative_wind = glm::normalize(relative_wind);
-	float costheta = (glm::dot(final_normal, relative_wind) > 0.9) ? 0.9 : glm::dot(final_normal, relative_wind);
+	final_normal = final_normal / (glm::length(final_normal) + gap);
+	float costheta = glm::dot(final_normal, glm::normalize(relative_wind));
 	F_drag = -C_drag * final_S * sqrt(1 - costheta * costheta) * relative_wind;
 	F_lift = C_lift * final_S * costheta * glm::cross(glm::cross(final_normal, relative_wind), relative_wind);
 
@@ -290,23 +296,49 @@ __device__ glm::vec3 wind_velocity(glm::vec3 F_lift, glm::vec3 F_drag, float sim
 	*/
 	return vec_wind;
 }
-__device__ glm::vec3 compute_selfcollide_force(unsigned int idx, glm::vec3* g_pos_in, unsigned int num)
+__device__ glm::vec3 compute_selfcollide_force(unsigned int idx, glm::vec3* g_pos_in, unsigned int num, unsigned int* CSR_R1, s_spring* CSR_C_SPRING1, unsigned int* CSR_R2, s_spring* CSR_C_SPRING2)
 {
 	float dis = 1;
+	int first_neigh1 = CSR_R1[idx];
+	int last_neigh1 = CSR_R1[idx + 1];
+	int first_neigh2 = CSR_R2[idx];
+	int last_neigh2 = CSR_R2[idx + 1];
+	float temp_stiffness = repul_stiffness;
+	float all_neigh[15] = {0};
+	for (int i = first_neigh1; i < last_neigh1; i++)
+	{
+		//all_neigh.push_back(CSR_C_SPRING1[i].end);
+		all_neigh[i - first_neigh1] = CSR_C_SPRING1[i].end;
+	}
+	for (int i = first_neigh2; i < last_neigh2; i++)
+	{
+		//all_neigh.push_back(CSR_C_SPRING2[i].end);
+		all_neigh[last_neigh1 - first_neigh1 + i - first_neigh2] = CSR_C_SPRING2[i].end;
+	}
+	
 	glm::vec3 repul_force = glm::vec3(0.0);
 	glm::vec3 pos2;
 	volatile glm::vec3 posData = g_pos_in[idx];
 	glm::vec3 pos = glm::vec3(posData.x, posData.y, posData.z);
 	for (int i = 0; i < num; i++)
 	{
+		for (int k=0; k < last_neigh2-first_neigh2+last_neigh1-first_neigh1; k++)
+		{
+			if (all_neigh[k] == i)
+			{
+				temp_stiffness = 0;
+				break;
+			}
+		}
 		volatile glm::vec3 posData = g_pos_in[i];
 		pos2 = glm::vec3(posData.x, posData.y, posData.z);
 		pos2 = pos2 - pos;
 		dis = glm::length(pos2);
 		if (dis > 0 && dis < critical_length)
 		{
-			repul_force -= repul_stiffness * (critical_length - dis) * glm::normalize(pos2);
+			repul_force -= temp_stiffness * (critical_length - dis) * glm::normalize(pos2);
 		}
+		temp_stiffness = repul_stiffness;
 
 	}
 
@@ -315,23 +347,44 @@ __device__ glm::vec3 compute_selfcollide_force(unsigned int idx, glm::vec3* g_po
 
 __device__ void collision_response_projection(D_BVH bvh,
 	glm::vec3& force, glm::vec3& pos, glm::vec3& pos_old,
-	int idx, glm::vec3* collision_force)
+	int idx, glm::vec3* collision_force, glm::vec3& vel, float sim_time)
 {
+	glm::vec3 pos1;
+	glm::vec3 pos2;
+	glm::vec3 dir;
 	int idx_pri;
 	bool inter = bvh.intersect(pos, idx_pri);
 	if (inter)
 	{
 		float dist;
+		float d, d1, d2;
+		float mid;
+		float gap = 0.00001;
 		glm::vec3 normal;
 		if (bvh.primitive_intersect(idx_pri, pos, dist, normal))  // check the point inside the primitive or not
 		{
-			//float k = 1.0;
-			//dist = k * glm::abs(dist);    // //collision response with penalty force
-			//pos += dist * normal;
-			pos = pos_old;
-			//pos_old = pos;
+			float k = 1.0;
+			dist = k * glm::abs(dist);    // //collision response with penalty force
 
-			//collision_force[idx] = normal;
+			pos1 = pos + dist * normal;
+			d = glm::dot(normal, pos1);
+			d2 = glm::dot(normal, pos) - d;
+			d1 = glm::dot(normal, pos_old) - d;
+			mid = (abs(d2) + 0.00001) / (abs(d1) + abs(d2) + 0.00001);
+			pos2 = mid * pos_old + (1 - mid) * pos;
+			dir = (slope_index * (pos1 - pos2) + dist * normal) / (glm::length(slope_index * (pos1 - pos2) + dist * normal) + gap);
+			if (sim_time > cut_time)
+			{
+				pos = pos2 + reflect_index * glm::length(vel) * dir * dt;
+				pos_old = pos2;
+			}
+			else
+			{
+				pos = pos + dist * normal;
+				pos_old = pos;
+			}
+
+			collision_force[idx] = normal;
 		}
 		else
 			collision_force[idx] = glm::vec3(0.0);
@@ -443,21 +496,20 @@ __global__ void verlet(glm::vec3* g_pos_in, glm::vec3* g_pos_old_in, glm::vec3* 
 	F_lift = compute_wind_force_lift(index, g_pos_in, CSR_R_STR, CSR_C_STR, vel, pos, sim_time);
 	F_drag = compute_wind_force_drag(index, g_pos_in, CSR_R_STR, CSR_C_STR, vel, pos, sim_time);
 	glm::vec3 vec_wind = wind_velocity(F_lift, F_drag, sim_time);
-	//double wind_scale = 1e-5;
 	F_lift = compute_wind_force2_lift(index, g_pos_in, CSR_R_STR, CSR_C_STR, vel, pos, vec_wind);
 	F_drag = compute_wind_force2_drag(index, g_pos_in, CSR_R_STR, CSR_C_STR, vel, pos, vec_wind);
-	//F_lift *= wind_scale;
-	//F_drag *= wind_scale;
-	force = force + F_lift+F_drag;
+	force = force + F_lift + F_drag;
 	// wind_end
-	//force += compute_selfcollide_force(index, g_pos_in, NUM_VERTICES);
+	force += compute_selfcollide_force(index, g_pos_in, NUM_VERTICES, CSR_R_STR, CSR_C_STR, CSR_R_BD, CSR_C_BD);
 	glm::vec3 inelastic_force = glm::dot(collision_force[index], force) * collision_force[index];       //collision response force, if intersected, keep tangential
 	force -= inelastic_force;
 	glm::vec3 acc = force / mass;
 	glm::vec3 tmp = pos;
 	pos = pos + pos - pos_old + acc * dt * dt;
 	pos_old = tmp;
-	collision_response_projection(bvh, force, pos, pos_old, index, collision_force);
+	collision_response_projection(bvh, force, pos, pos_old, index, collision_force, vel, sim_time);
+	//if (sim_time>100)
+	//	collision_response_projection(cloth_bvh, force, pos, pos_old, index, collision_force);
 
 	g_pos_out[index] = pos;
 	g_pos_old_out[index] = pos_old;

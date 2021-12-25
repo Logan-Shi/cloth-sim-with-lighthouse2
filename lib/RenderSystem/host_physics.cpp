@@ -32,28 +32,28 @@ void HostPhysics::InitPhysics()
 	table.translate(0,0.81,0);
 	main_scene->add_body(table);
 	
-	//Mesh curtain_1("../_shareddata/Cloth/curtain.obj", SINGLE_LAYER_NOB);
-	//Mesh holder_1("../_shareddata/Cloth/curtain_holder.obj");
-	//main_scene->add_cloth(curtain_1);
-	//main_scene->add_body(holder_1);
+	Mesh curtain_1("../_shareddata/Cloth/curtain.obj", SINGLE_LAYER_NOB);
+	Mesh holder_1("../_shareddata/Cloth/holder1.obj");
+	main_scene->add_cloth(curtain_1);
+	main_scene->add_body(holder_1);
 
-	//Mesh curtain_2("../_shareddata/Cloth/curtain2.obj", SINGLE_LAYER_NOB);
-	//Mesh holder_2("../_shareddata/Cloth/curtain_holder.obj");
-	//main_scene->add_cloth(curtain_2);
-	//main_scene->add_body(holder_2);
+	Mesh curtain_2("../_shareddata/Cloth/curtain2.obj", SINGLE_LAYER_NOB);
+	Mesh holder_2("../_shareddata/Cloth/holder2.obj");
+	main_scene->add_cloth(curtain_2);
+	main_scene->add_body(holder_2);
 
 	//Mesh curtain_3("../_shareddata/Cloth/curtain3.obj", SINGLE_LAYER_NOB);
-	//Mesh holder_3("../_shareddata/Cloth/curtain_holder2.obj");
+	//Mesh holder_3("../_shareddata/Cloth/holder3.obj");
 	//main_scene->add_cloth(curtain_3);
 	//main_scene->add_body(holder_3);
 
 	//Mesh curtain_4("../_shareddata/Cloth/curtain4.obj", SINGLE_LAYER_NOB);
-	//Mesh holder_4("../_shareddata/Cloth/curtain_holder2.obj");
+	//Mesh holder_4("../_shareddata/Cloth/holder4.obj");
 	//main_scene->add_cloth(curtain_4);
 	//main_scene->add_body(holder_4);
 
 	main_scene->init_simulation();
-	vertices.resize(1);
+	vertices.resize(3);
 }
 
 void HostPhysics::UpdatePhysics(const float dt)
