@@ -4,6 +4,8 @@ We built a real-time cloth simulation with Lighthouse 2 framework for real-time 
 
 ![Demo Gif](/media/cloth-with-wind3.gif)
 
+![full scene](/media/7.png)
+
 Cloth physics are solved using verlet integration which is also accelerated with CUDA. 
 
 ## Features
